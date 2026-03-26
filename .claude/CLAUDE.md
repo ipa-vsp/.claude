@@ -17,6 +17,7 @@ The following skills are available in `.claude/skills` and can be used to guide 
 | **ros2_transforms**     | TF2 Management                            | TF2 Wrappers avoiding domain dependency on `geometry_msgs`                            |
 | **ros2_diagnostics**    | Health Monitoring                         | `diagnostic_updater` integration, Health entities, Frequency monitoring               |
 | **ros2_bag**            | Data Recording                            | Programmatic bag recording and replay utilities (rosbag2)                             |
+| **ros2_control**        | Hardware Control Framework                | Hardware interfaces, custom controllers, Controller Manager, URDF integration (C++)   |
 
 ## Project Structure
 

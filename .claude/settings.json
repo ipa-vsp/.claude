@@ -30,18 +30,23 @@
       "Bash(rosdep:*)",
       "Bash(vcs:*)",
       "Bash(source:*)",
-      "Bash(pytest:*)"
+      "Bash(pytest:*)",
+      "WebFetch(domain:control.ros.org)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
-      "deny": [
-        "Bash(sudo:*)",
-        "Bash(docker:*)",
-        "Bash(rm -rf:*)",
-        "Read(./.env)",
-        "Read(~/.ssh/**)"
-      ],
-      "ask": [
-        "Bash(git push:*)"
-      ],
-      "defaultMode": "acceptEdits"
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(docker:*)",
+      "Bash(rm -rf:*)",
+      "Read(./.env)",
+      "Read(~/.ssh/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
+    ],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "e:\\my-claude-skills\\.claude\\skills"
+    ]
   }
 }
