@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/index.html)",
+      "Bash(sed 's/<[^>]*>//g')",
+      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/getting_started/getting_started.html)",
+      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/ros2_control/doc/index.html)",
+      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/index.html)"
+    ]
+  }
+}
