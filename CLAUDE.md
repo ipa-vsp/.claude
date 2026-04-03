@@ -19,14 +19,6 @@ The following skills are available in `.claude/skills` and can be used to guide 
 | **ros2_bag**            | Data Recording                            | Programmatic bag recording and replay utilities (rosbag2)                             |
 | **ros2_control**        | Hardware Control Framework                | Hardware interfaces, custom controllers, Controller Manager, URDF integration (C++)   |
 
-## Project Structure
-
-The project follows a strict separation of concerns:
-
-- **src/domain/**: Pure business logic, entities, and use cases. No ROS2 dependencies.
-- **src/application/**: Application services and interfaces. Orchestrates logic.
-- **src/infrastructure/**: ROS2 specific implementations (Nodes, Publishers, Subscribers).
-
 ## Getting Started
 
 To use a skill, reference the skill file (e.g., `.claude/skills/ros2_node_creation/SKILL.md`) for templates and best practices.

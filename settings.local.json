@@ -5,7 +5,26 @@
       "Bash(sed 's/<[^>]*>//g')",
       "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/getting_started/getting_started.html)",
       "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/ros2_control/doc/index.html)",
-      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/index.html)"
+      "Bash(curl -sL --max-time 30 https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/index.html)",
+      "Bash(find /home/adm-vsp/ros_ws/fullbody/colcon_ws/src -maxdepth 2 -type f \\\\\\(-name package.xml -o -name CMakeLists.txt -o -name Dockerfile -o -name *.dockerfile \\\\\\))",
+      "Bash(nvidia-smi)",
+      "Bash(nvcc --version)",
+      "Bash(dpkg -l)",
+      "Bash(pip list:*)",
+      "Read(//usr/share/**)",
+      "Read(//usr/local/**)",
+      "Bash(lspci)",
+      "Bash(apt list:*)",
+      "Bash(printenv ROS_DISTRO:*)",
+      "Bash(conda env:*)",
+      "Bash(find /home/adm-vsp/ros_ws/colcon_* -maxdepth 3 -name \"package.xml\")",
+      "Bash(pip show:*)",
+      "Bash(echo \"pip-pinocchio: $?\")",
+      "Bash(echo \"pip-coal: $?\")",
+      "Bash(apt-cache search:*)",
+      "Bash(apt-cache show:*)",
+      "Bash(apt-cache depends:*)",
+      "Bash(apt-cache rdepends:*)"
     ]
   }
 }
