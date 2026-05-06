@@ -24,7 +24,8 @@
       "Bash(apt-cache search:*)",
       "Bash(apt-cache show:*)",
       "Bash(apt-cache depends:*)",
-      "Bash(apt-cache rdepends:*)"
+      "Bash(apt-cache rdepends:*)",
+      "WebFetch(domain:nvidia-isaac-ros.github.io)"
     ]
   }
 }
