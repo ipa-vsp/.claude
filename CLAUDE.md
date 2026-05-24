@@ -44,7 +44,10 @@ For C++ the same separation lives under `include/<pkg>/<layer>/` and
 | ---------------------- | ----------- |
 | `python-patterns`      | Pythonic idioms, PEP 8, type hints, robustness |
 | `python-testing`       | pytest, TDD, fixtures, mocking, parametrization, coverage |
+| `cpp-coding-standards` | C++ Core Guidelines — modern, safe, idiomatic C++ |
+| `cpp-test`             | GoogleTest / CTest authoring, flaky-test diagnosis, coverage / sanitizers |
 | `pytorch-patterns`     | Training pipelines, model architectures, data loading |
+| `ai-first-engineer`    | Engineering operating model for teams where AI agents produce most code |
 | `content-engine`       | Platform-native content systems (non-ROS, general use) |
 
 To use a skill, reference its file (e.g.
