@@ -25,6 +25,9 @@
       "Bash(apt-cache show:*)",
       "Bash(apt-cache depends:*)",
       "Bash(apt-cache rdepends:*)",
+      "Bash(git -C /home/adm-vsp/ros_ws/canopen/colcon_ws/src remote -v)",
+      "Bash(git -C /home/adm-vsp/ros_ws/canopen/colcon_ws/src/canopen remote -v)",
+      "Bash(gh pr *)"
       "WebFetch(domain:nvidia-isaac-ros.github.io)"
     ]
   }

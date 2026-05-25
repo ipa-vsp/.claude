@@ -1,36 +1,105 @@
-# ROS2 Clean Architecture Project
+# ROS 2 Clean Architecture Project — Claude Context
 
-This project is set up with a comprehensive set of **Claude Skills** designed to facilitate ROS2 development following **Clean Architecture** principles.
+This project is set up with **Claude Skills**, **sub-agents**, and
+**rules** to facilitate ROS 2 development following **Clean
+Architecture** principles. This file is the persistent orientation
+note Claude reads on every session; deep content lives in `skills/`,
+`rules/`, `agents/`, and `commands/`.
 
-## Available Skills
+## Project layout
 
-The following skills are available in `.claude/skills` and can be used to guide development:
+A Clean Architecture package follows:
 
-| Skill Name              | Description                               | Key Components                                                                        |
-| ----------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------- |
-| **ros2_node_creation**  | Create Clean Architecture compliant Nodes | `BaseNode` template, Dependency Injection, QoS profiles (Python & C++)                |
-| **ros2_launch_config**  | Modular Launch files                      | Composition, `IncludeLaunchDescription`, Parameter management, C++ executable support |
-| **ros2_service_action** | Services and Actions                      | Server/Client wrappers, Domain Use Case integration (Python & C++)                    |
-| **ros2_messaging**      | Pub/Sub Patterns                          | Domain-driven publishers, Generic subscribers, Thread-safe buffers, Synchronization   |
-| **ros2_testing**        | Testing Strategy                          | Unit (Domain), Integration (Node), E2E (Launch), GTest/GMock support                  |
-| **ros2_lifecycle**      | Managed Nodes                             | Lifecycle Node templates, State transition management, Lifecycle Clients              |
-| **ros2_transforms**     | TF2 Management                            | TF2 Wrappers avoiding domain dependency on `geometry_msgs`                            |
-| **ros2_diagnostics**    | Health Monitoring                         | `diagnostic_updater` integration, Health entities, Frequency monitoring               |
-| **ros2_bag**            | Data Recording                            | Programmatic bag recording and replay utilities (rosbag2)                             |
-| **ros2_control**        | Hardware Control Framework                | Hardware interfaces, custom controllers, Controller Manager, URDF integration (C++)   |
+```
+src/<pkg>/<pkg>/
+├── domain/           # entities, value objects, ports (no ROS deps)
+├── application/      # use cases (depends only on domain)
+├── infrastructure/   # rclpy / rclcpp nodes, TF, repositories
+└── presentation/     # CLI, launch entrypoints
+```
 
-## Getting Started
+For C++ the same separation lives under `include/<pkg>/<layer>/` and
+`src/<layer>/`.
 
-To use a skill, reference the skill file (e.g., `.claude/skills/ros2_node_creation/SKILL.md`) for templates and best practices.
+## Skills
 
-## Common Commands
+### ROS 2 core
 
-For a comprehensive list of ROS2 commands, build instructions, and debugging tools, please refer to:
+| Skill                  | Description                                | Key Components |
+| ---------------------- | ------------------------------------------ | -------------- |
+| `ros2_node_creation`   | Clean-arch compliant nodes (Py / C++)      | `BaseNode` template, DI, QoS profiles |
+| `ros2_lifecycle`       | Managed (lifecycle) nodes                  | Lifecycle templates, state transitions, clients |
+| `ros2_messaging`       | Pub/Sub patterns                           | Domain-driven publishers, thread-safe buffers, synchronization |
+| `ros2_service_action`  | Services and Actions                       | Server/Client wrappers, domain use case integration |
+| `ros2_launch_config`   | Modular launch files                       | Composition, `IncludeLaunchDescription`, parameters, C++ executables |
+| `ros2_transforms`      | TF2 management                             | TF2 wrappers without leaking `geometry_msgs` into domain |
+| `ros2_diagnostics`     | Health monitoring                          | `diagnostic_updater` integration, frequency monitoring |
+| `ros2_bag`             | Data recording                             | Programmatic rosbag2 record / replay |
+| `ros2_testing`         | Testing strategy                           | Unit (domain), integration (node), E2E (launch), GTest/GMock |
+| `ros2_control`         | Hardware control framework                 | Hardware interfaces, custom controllers, controller manager, URDF |
 
-- **[ROS2 Commands Reference](.claude/commands/ros2.md)**: `colcon`, `ros2`, `rqt`, etc.
+### Language / framework
 
-### Quick Reference
+| Skill                  | Description |
+| ---------------------- | ----------- |
+| `python-patterns`      | Pythonic idioms, PEP 8, type hints, robustness |
+| `python-testing`       | pytest, TDD, fixtures, mocking, parametrization, coverage |
+| `cpp-coding-standards` | C++ Core Guidelines — modern, safe, idiomatic C++ |
+| `cpp-test`             | GoogleTest / CTest authoring, flaky-test diagnosis, coverage / sanitizers |
+| `pytorch-patterns`     | Training pipelines, model architectures, data loading |
+| `ai-first-engineer`    | Engineering operating model for teams where AI agents produce most code |
+| `content-engine`       | Platform-native content systems (non-ROS, general use) |
 
-- **Build**: `colcon build --symlink-install`
-- **Test**: `colcon test`
-- **Source**: `source install/setup.bash`
+To use a skill, reference its file (e.g.
+`.claude/skills/ros2_node_creation/SKILL.md`).
+
+## Sub-agents
+
+| Agent | When to use |
+|-------|-------------|
+| `clean-arch-architect` | **Before** writing ROS 2 code — node vs use case, topic vs service vs action, compose vs split, where a new port belongs. Returns an architectural recommendation with trade-offs, not code. |
+| `ros2-style-reviewer`  | **Before** opening a ROS 2 PR — Clean Architecture, lifecycle, QoS, pluginlib, tests, build manifests. Returns a punch list with `file:line` anchors. |
+| `code-reviewer`        | After any code change — general quality, security, maintainability review. MUST be used after edits. |
+| `cpp-reviewer`         | After any C++ change — memory safety, modern C++ idioms, concurrency, performance. MUST be used for C++. |
+| `python-reviewer`      | After any Python change — PEP 8, Pythonic idioms, type hints, security, performance. MUST be used for Python. |
+| `cpp-build-resolver`   | When a C++ / CMake / linker build fails — surgical fixes, minimal changes. |
+| `pytorch-build-resolver` | When PyTorch training or inference crashes — tensor shape, device, gradient, DataLoader, AMP issues. |
+
+## Rules
+
+| Rule file                | What it constrains |
+| ------------------------ | ------------------ |
+| `clean_architecture.md`  | Layer dependency rules — who may import what |
+| `ros2_general.md`        | Project-wide ROS 2 conventions (naming, layout, launch, params) |
+| `ros2_nodes.md`          | Node design — lifecycle, callback groups, parameters |
+| `ros2_communication.md`  | Topic naming, QoS profiles, custom interfaces |
+| `testing.md`             | Unit / integration / launch test coverage requirements |
+| `robot_specific.md`      | Robot-level overrides — replace per project |
+
+## Conventions worth remembering
+
+* **Domain code does not import `rclpy`, `rclcpp`, or any `*_msgs`
+  package.** If it needs ROS, it is not domain.
+* **Lifecycle by default** for anything owning a resource (sensor,
+  actuator, hardware bridge).
+* **`declare_parameter` for every parameter** — silent
+  `get_parameter` on undeclared names is a bug.
+* **QoS matches semantics** — sensor data = best-effort, commands =
+  reliable, latched config = transient-local.
+* **Tests run via `colcon test`** — never `sleep(N)` to synchronize;
+  use futures, conditions, or `launch_testing.ReadyToTest`.
+
+## Common commands
+
+```bash
+# Build the workspace
+colcon build --symlink-install
+source install/setup.bash
+
+# Test
+colcon test --packages-select <pkg>
+colcon test-result --all
+```
+
+See `.claude/commands/ros2.md` for the full reference card (`colcon`,
+`ros2`, `rqt`, etc.).
