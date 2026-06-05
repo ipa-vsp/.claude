@@ -65,6 +65,38 @@ To use a skill, reference its file (e.g.
 | `cpp-build-resolver`   | When a C++ / CMake / linker build fails — surgical fixes, minimal changes. |
 | `pytorch-build-resolver` | When PyTorch training or inference crashes — tensor shape, device, gradient, DataLoader, AMP issues. |
 
+### Agent delegation policy (opt-in via "Use agents")
+
+**Default: do NOT spawn sub-agents.** Behave normally and handle tasks
+inline.
+
+**Only when the user's message contains the phrase "Use agents"** does
+the routing table below activate: for that message, proactively start
+the matching sub-agent(s) for any trigger the task hits, announcing each
+spawn in one line first. The opt-in applies to that message only — it
+does not persist to later messages unless they also say "Use agents".
+
+| Trigger (what just happened / is about to happen) | Spawn this agent | Timing |
+| ------------------------------------------------- | ---------------- | ------ |
+| About to write a new node, use case, port, or decide topic vs service vs action / compose vs split | `clean-arch-architect` | **Before** writing code |
+| Finished editing any source file | `code-reviewer` | After the edit |
+| Finished editing any **C++** file (`.cpp`/`.hpp`/`.cc`/`.h`) | `cpp-reviewer` (in addition to `code-reviewer`) | After the edit |
+| Finished editing any **Python** file (`.py`) | `python-reviewer` (in addition to `code-reviewer`) | After the edit |
+| About to open a ROS 2 / Nav2 PR (or user asks to prep/open one) | `ros2-style-reviewer` | **Before** the PR |
+| A C++ / CMake / linker build fails | `cpp-build-resolver` | On failure |
+| PyTorch training or inference crashes | `pytorch-build-resolver` | On failure |
+
+Guidelines:
+* **Batch reviews.** After a related set of edits is complete (not after
+  every single `Edit` call), trigger the reviewer(s) once on the whole
+  change. Don't re-spawn mid-sequence.
+* **Skip when trivial.** Pure docs/comment/whitespace edits, or changes
+  the user told you not to review, do not trigger a reviewer.
+* **One architect pass per feature** — consult `clean-arch-architect`
+  once for the design, not for each file it produces.
+* The user can always say "skip the agents" / "no review" to suppress
+  this for a given task.
+
 ## Rules
 
 | Rule file                | What it constrains |
