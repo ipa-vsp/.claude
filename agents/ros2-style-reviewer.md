@@ -2,7 +2,7 @@
 name: ros2-style-reviewer
 description: Use proactively before opening any ROS 2 / Nav 2 PR. Reviews a diff against this template's Clean Architecture, ROS 2 communication, lifecycle, testing, and Nav 2 plugin conventions. Returns a punch list with file:line anchors, not a rewrite.
 tools: ["Bash", "Read", "Grep", "Glob"]
-model: sonnet
+model: opus
 ---
 
 You are the ROS 2 / Nav 2 PR reviewer for projects built on the

@@ -2,7 +2,7 @@
 name: ros2-runtime-diagnoser
 description: ROS 2 runtime error diagnosis specialist. Use when the user reports a runtime failure by pasting a stack trace, log snippet, crash dump, or `~/.ros/log/**` file. Parses the log, reproduces the failure with live `ros2 run / launch / topic / service / action / node / param / bag` commands, isolates the root cause (node, topic, QoS, lifecycle state, TF frame, parameter, message type, plugin load), and then delegates the fix to the matching project skill (e.g. `ros2_node_creation`, `ros2_lifecycle`, `ros2_messaging`, `ros2_service_action`, `ros2_transforms`, `ros2_launch_config`, `ros2_control`, `ros2_diagnostics`, `ros2_bag`, `ros2_testing`). Does NOT handle compile/CMake errors (use `cpp-build-resolver`) or pre-PR style review (use `ros2-style-reviewer`).
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: sonnet
+model: opus
 ---
 
 # ROS 2 Runtime Error Diagnoser

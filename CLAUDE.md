@@ -55,6 +55,12 @@ To use a skill, reference its file (e.g.
 
 ## Sub-agents
 
+All sub-agents run on **Opus**. They group into two opt-in workflows:
+**`uab`** (building / reviewing code) and **`uat`** (running &
+testing the live system).
+
+### `uab` — build & review agents
+
 | Agent | When to use |
 |-------|-------------|
 | `clean-arch-architect` | **Before** writing ROS 2 code — node vs use case, topic vs service vs action, compose vs split, where a new port belongs. Returns an architectural recommendation with trade-offs, not code. |
@@ -64,17 +70,37 @@ To use a skill, reference its file (e.g.
 | `python-reviewer`      | After any Python change — PEP 8, Pythonic idioms, type hints, security, performance. MUST be used for Python. |
 | `cpp-build-resolver`   | When a C++ / CMake / linker build fails — surgical fixes, minimal changes. |
 | `pytorch-build-resolver` | When PyTorch training or inference crashes — tensor shape, device, gradient, DataLoader, AMP issues. |
+| `ros2-runtime-diagnoser` | When a runtime failure is reported via a pasted log / stack trace / `~/.ros/log` dump — parses, reproduces, isolates root cause, applies a skill-guided fix. |
 
-### Agent delegation policy (opt-in via "Use agents")
+### `uat` — run & test agents
+
+A pipeline driven by the **main session**: `uat-runner` →
+`uat-injector` → `uat-diagnoser` → `uat-fixer` → (re-run `uat-runner`).
+
+| Agent | When to use |
+|-------|-------------|
+| `uat-runner`    | Starts the app/command under test (`ros2 launch` / `run`, python / C++ binary, `colcon test`). Asks for the command if none is given. |
+| `uat-injector`  | Injects the target/goal(s) (`topic pub`, `service call`, `action send_goal`, param set) — single or multiple. Asks for the goal(s) if none given. |
+| `uat-diagnoser` | Monitors & diagnoses the result (read-only); reuses the symptom→cause→skill routing of `ros2-runtime-diagnoser`. Hands off to `uat-fixer`. |
+| `uat-fixer`     | Applies the minimal, layer-respecting fix; names a uab agent/skill to escalate to when needed. Main session then re-runs `uat-runner`. |
+
+### Agent delegation policy (opt-in via `uab` / `uat`)
 
 **Default: do NOT spawn sub-agents.** Behave normally and handle tasks
 inline.
 
-**Only when the user's message contains the phrase "Use agents"** does
-the routing table below activate: for that message, proactively start
-the matching sub-agent(s) for any trigger the task hits, announcing each
-spawn in one line first. The opt-in applies to that message only — it
-does not persist to later messages unless they also say "Use agents".
+Two per-message opt-in triggers activate the routing tables below. The
+opt-in applies to **that message only** — it does not persist unless a
+later message repeats the trigger. A message may contain both.
+
+* **`uab`** — *Use Agents for Building.* Activates the build/review
+  routing table.
+* **`uat`** — *Use Agents for Testing.* Activates the run/test loop.
+
+When a trigger is present, proactively start the matching sub-agent(s)
+for any row the task hits, announcing each spawn in one line first.
+
+#### `uab` routing
 
 | Trigger (what just happened / is about to happen) | Spawn this agent | Timing |
 | ------------------------------------------------- | ---------------- | ------ |
@@ -85,8 +111,9 @@ does not persist to later messages unless they also say "Use agents".
 | About to open a ROS 2 / Nav2 PR (or user asks to prep/open one) | `ros2-style-reviewer` | **Before** the PR |
 | A C++ / CMake / linker build fails | `cpp-build-resolver` | On failure |
 | PyTorch training or inference crashes | `pytorch-build-resolver` | On failure |
+| A runtime failure is reported via a pasted log / stack trace / log dump | `ros2-runtime-diagnoser` | On report |
 
-Guidelines:
+`uab` guidelines:
 * **Batch reviews.** After a related set of edits is complete (not after
   every single `Edit` call), trigger the reviewer(s) once on the whole
   change. Don't re-spawn mid-sequence.
@@ -94,8 +121,31 @@ Guidelines:
   the user told you not to review, do not trigger a reviewer.
 * **One architect pass per feature** — consult `clean-arch-architect`
   once for the design, not for each file it produces.
-* The user can always say "skip the agents" / "no review" to suppress
-  this for a given task.
+
+#### `uat` routing (main-session-orchestrated loop)
+
+The main session runs the agents in sequence, passing each one's report
+to the next, and **re-runs `uat-runner` after `uat-fixer`** to confirm.
+
+| Step | Spawn this agent | What it does |
+| ---- | ---------------- | ------------ |
+| 1. Bring the system up | `uat-runner` | Runs the command under test. **Asks the user** for the run command if not provided. |
+| 2. Drive the behaviour | `uat-injector` | Injects single/multiple goal(s). **Asks the user** for the goal/command if not provided. |
+| 3. Observe & diagnose | `uat-diagnoser` | Monitors the result, isolates root cause (read-only), names the fix skill. |
+| 4. Fix | `uat-fixer` | Applies the minimal fix. May **name** a uab agent/skill to escalate to (it cannot spawn agents itself). |
+| 5. Confirm | `uat-runner` (re-run) | Main session re-runs the loop from step 1/2 to verify the fix. |
+
+`uat` guidelines:
+* **Runner and Injector must ask** when the command or goal is missing —
+  never guess a package, executable, or payload.
+* **Sub-agents don't nest.** `uat-fixer` reports an escalation target
+  (e.g. `cpp-build-resolver`, `clean-arch-architect`); the main session
+  spawns it, then resumes the loop.
+* **Stop on PASS.** If `uat-diagnoser` reports PASS, end the loop — do
+  not run the Fixer.
+
+The user can always say "skip the agents" / "no review" to suppress
+either workflow for a given task.
 
 ## Rules
 
