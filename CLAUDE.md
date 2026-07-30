@@ -6,21 +6,6 @@ Architecture** principles. This file is the persistent orientation
 note Claude reads on every session; deep content lives in `skills/`,
 `rules/`, `agents/`, and `commands/`.
 
-## Project layout
-
-A Clean Architecture package follows:
-
-```
-src/<pkg>/<pkg>/
-├── domain/           # entities, value objects, ports (no ROS deps)
-├── application/      # use cases (depends only on domain)
-├── infrastructure/   # rclpy / rclcpp nodes, TF, repositories
-└── presentation/     # CLI, launch entrypoints
-```
-
-For C++ the same separation lives under `include/<pkg>/<layer>/` and
-`src/<layer>/`.
-
 ## Skills
 
 ### ROS 2 core
@@ -151,7 +136,6 @@ either workflow for a given task.
 
 | Rule file                | What it constrains |
 | ------------------------ | ------------------ |
-| `clean_architecture.md`  | Layer dependency rules — who may import what |
 | `ros2_general.md`        | Project-wide ROS 2 conventions (naming, layout, launch, params) |
 | `ros2_nodes.md`          | Node design — lifecycle, callback groups, parameters |
 | `ros2_communication.md`  | Topic naming, QoS profiles, custom interfaces |

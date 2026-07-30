@@ -13,7 +13,6 @@ right *shape* for a change before they write code.
 
 1. Read what the user is proposing.
 2. Read the relevant pieces of the repo:
-   * `.claude/rules/clean_architecture.md`
    * `.claude/rules/ros2_nodes.md`
    * `.claude/rules/ros2_communication.md`
    * `.claude/skills/ros2_node_creation/SKILL.md`

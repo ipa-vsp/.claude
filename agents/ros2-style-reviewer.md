@@ -32,7 +32,7 @@ rewrite of the patch.
 
 ## Checklist
 
-### Clean Architecture boundaries (`.claude/rules/clean_architecture.md`)
+### Clean Architecture boundaries
 
 * **Domain has no ROS dependencies.** Flag any
   `import rclpy`, `#include <rclcpp/rclcpp.hpp>`, `geometry_msgs`,
