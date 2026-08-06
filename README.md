@@ -67,24 +67,30 @@ make **you** produce it.
 /robotics-mentor   I want to actually understand TF frame conventions
 ```
 
-Claude switches to an expert-mentor stance: it asks questions instead of
-answering, explains anything you get wrong through a concrete example — from
-your own code where possible, otherwise from your robot or a canonical
-scenario — then hands the next step back to you. **You write the code** —
-Claude will give you a signature, a skeleton with `TODO`s, or a failing test,
-and will review what you write by asking about it, but it will not write the
-body for you.
+Claude switches to an expert-mentor stance: one question per turn, aimed at the
+edge where your model stops being correct, and anything you get wrong is
+explained through a concrete example — from your own code where possible,
+otherwise from your robot or a canonical scenario — then handed back to you.
+
+**You write every line that ends up in the repo.** When you're stuck, Claude
+descends a five-rung hint ladder one rung per turn — region → symptom question →
+concept → contract/signature → *a failing test you make pass*. It never writes
+the implementation, the patch, or a "rough sketch you could adapt". Facts are
+free, though: API signatures, return types, units, and build mechanics come back
+immediately, because withholding a lookup is friction, not teaching.
 
 It is **general robotics**, not scoped to this workspace: ROS 1/2 and non-ROS,
-kinematics, control, state estimation, perception, planning, embedded and
-real-time, sim-to-real, RL. Point it at whatever you're learning.
+kinematics, control, state estimation, perception, planning, behaviour trees,
+embedded and real-time, sim-to-real, RL. `references/probe-questions.md` inside
+the skill carries question banks and the common misconceptions per domain.
 
 | | |
 | --- | --- |
 | **Enter** | `/robotics-mentor` — the *only* way in. It never triggers on its own, no matter how much a question sounds like learning. |
 | **Duration** | Stays on for the rest of the session, across follow-ups and topic changes. |
-| **Exit** | "just tell me", "answer directly", "exit mentor" — then you get a full direct answer. |
-| **Auto-exit** | Claude breaks character by itself for anything touching real hardware or safety, pure API lookups, or if you've been stuck on the same point for a few exchanges. |
+| **Exit** | "just tell me", "answer directly", "exit mentor" — then you get a full direct answer. These are treated as a decision and honoured immediately. |
+| **Stuck ≠ exit** | "I don't get it" is struggle, not a request to leave. Claude makes the step *smaller* — shrinks the question, suggests an experiment, or gives the category of the answer — rather than folding. |
+| **Auto-exit** | Claude breaks character by itself, and says so, for anything touching real hardware or safety (stated plainly and immediately — never Socratic about physical risk), pure lookups, or visible frustration. |
 
 ### ROS 2 core skills
 
@@ -232,6 +238,11 @@ description: One line. This is what Claude matches against, so be specific
 
 The directory name is the slash command (`/my_skill`). Add a row to the
 table in `CLAUDE.md` so it shows up in the session orientation.
+
+Keep `SKILL.md` to what's needed *every* time the skill runs, and push bulky
+lookup material into a `references/` subdirectory that the body points at, so
+it's read only when relevant — `robotics-mentor/references/probe-questions.md`
+is the example.
 
 **A manual-only skill** — skill matching runs off `description`, so to stop one
 auto-loading, lead the description with the prohibition instead of the topic:
