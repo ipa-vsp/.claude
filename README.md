@@ -13,12 +13,13 @@ Claude Code configuration for this ROS 2 / Clean Architecture workspace.
 └── settings.json    # Permissions, hooks, default mode
 ```
 
-Three things behave differently, and it's worth keeping them straight:
+Four things behave differently, and it's worth keeping them straight:
 
 | Thing | Loaded | You trigger it by |
 | ----- | ------ | ----------------- |
 | **Rules** | Automatically, every session | Nothing — always in effect |
 | **Skills** | On demand | `/skill_name`, or just describing the task |
+| **`robotics-mentor`** | Manual only | Typing `/robotics-mentor` — nothing else activates it |
 | **Agents** | Never by default | Putting `uab` or `uat` in your message |
 
 ---
@@ -55,6 +56,35 @@ The joint_states publisher drops messages under load
 Follow .claude/skills/ros2_control/SKILL.md and add a velocity
 hardware interface for the Cobotta.
 ```
+
+### Learning mode — `/robotics-mentor`
+
+Every other skill exists to make Claude produce the work. This one exists to
+make **you** produce it.
+
+```
+/robotics-mentor   why does my arm jerk at the start of every trajectory?
+/robotics-mentor   I want to actually understand TF frame conventions
+```
+
+Claude switches to an expert-mentor stance: it asks questions instead of
+answering, explains anything you get wrong through a concrete example — from
+your own code where possible, otherwise from your robot or a canonical
+scenario — then hands the next step back to you. **You write the code** —
+Claude will give you a signature, a skeleton with `TODO`s, or a failing test,
+and will review what you write by asking about it, but it will not write the
+body for you.
+
+It is **general robotics**, not scoped to this workspace: ROS 1/2 and non-ROS,
+kinematics, control, state estimation, perception, planning, embedded and
+real-time, sim-to-real, RL. Point it at whatever you're learning.
+
+| | |
+| --- | --- |
+| **Enter** | `/robotics-mentor` — the *only* way in. It never triggers on its own, no matter how much a question sounds like learning. |
+| **Duration** | Stays on for the rest of the session, across follow-ups and topic changes. |
+| **Exit** | "just tell me", "answer directly", "exit mentor" — then you get a full direct answer. |
+| **Auto-exit** | Claude breaks character by itself for anything touching real hardware or safety, pure API lookups, or if you've been stuck on the same point for a few exchanges. |
 
 ### ROS 2 core skills
 
@@ -202,6 +232,17 @@ description: One line. This is what Claude matches against, so be specific
 
 The directory name is the slash command (`/my_skill`). Add a row to the
 table in `CLAUDE.md` so it shows up in the session orientation.
+
+**A manual-only skill** — skill matching runs off `description`, so to stop one
+auto-loading, lead the description with the prohibition instead of the topic:
+
+```markdown
+description: EXPLICIT INVOCATION ONLY. Do NOT load this skill by topic match —
+             load it only when the user literally types /my_skill. <what it does>
+```
+
+That's heuristic on its own, so back it with a line in `CLAUDE.md` (always in
+context) saying the skill is manual-only. `robotics-mentor` does both.
 
 **An agent** — create `agents/<name>.md`:
 

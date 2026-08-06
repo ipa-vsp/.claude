@@ -35,6 +35,18 @@ note Claude reads on every session; deep content lives in `skills/`,
 | `ai-first-engineer`    | Engineering operating model for teams where AI agents produce most code |
 | `content-engine`       | Platform-native content systems (non-ROS, general use) |
 
+### Learning (manual-only)
+
+| Skill | Description |
+| ----- | ----------- |
+| `robotics-mentor` | Socratic tutoring across all of robotics (not workspace-specific): Claude asks, the user derives the answer and writes the code |
+
+**`robotics-mentor` is manual-only — never load it automatically, by topic
+match, or because a message sounds like a learning question ("explain…", "help
+me understand…", "why does…"). Only a literal `/robotics-mentor` activates it.**
+Once activated it stays on for the session until the user says "just tell me" /
+"exit mentor". Every other skill in this file auto-matches as usual.
+
 To use a skill, reference its file (e.g.
 `.claude/skills/ros2_node_creation/SKILL.md`).
 
