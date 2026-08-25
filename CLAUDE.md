@@ -153,6 +153,7 @@ either workflow for a given task.
 | `ros2_communication.md`  | Topic naming, QoS profiles, custom interfaces |
 | `testing.md`             | Unit / integration / launch test coverage requirements |
 | `robot_specific.md`      | Robot-level overrides — replace per project |
+| `colcon_build.md`        | Workspace build standards, execution directory constraints, colcon best practices |
 
 ## Conventions worth remembering
 

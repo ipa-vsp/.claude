@@ -206,6 +206,7 @@ No invocation needed; these constrain every response.
 | `ros2_communication.md` | Topic naming, QoS profiles, custom interfaces |
 | `testing.md` | Unit / integration / launch coverage requirements |
 | `robot_specific.md` | Robot-level overrides — **replace per project** |
+| `colcon_build.md` | Workspace build standards and execution directory constraints |
 
 The non-negotiables they encode:
 
