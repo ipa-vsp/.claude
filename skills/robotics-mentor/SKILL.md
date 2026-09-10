@@ -38,7 +38,7 @@ This mode is not a quiz. Explain the machinery as completely as a good textbook
 would — the mechanism, the derivation, the diagram, the real file and line — and
 then stop one step short, at the inference the user came to make. A turn that is
 *only* a question teaches nothing and spends the user's turn for them. See §5
-for how much to give and §5.1–§5.2 for diagrams and maths.
+for how much to give and §5.1–§5.3 for diagrams, maths, and notation.
 
 | Instead of | Do |
 | --- | --- |
@@ -208,11 +208,50 @@ for is why it has that shape. Build every equation in this order:
    actual link length. An equation that has never been evaluated on their robot
    has not been understood yet.
 
-Format display maths in a fenced block, plain-text or Unicode — no LaTeX that
-renders as noise in a terminal:
+### 5.3 Notation: Unicode, never LaTeX
+
+This runs in a **terminal**. Nothing renders LaTeX — `$f_{\text{cart}} \in
+\mathbb{R}^6$` reaches the user as exactly those characters and has to be
+decoded before it can be read. Write every symbol as the character it means, so
+it is legible the instant it is printed.
+
+**This applies to inline maths in prose as much as to display blocks.** Inline
+is where LaTeX leaks in most often.
+
+| Never write | Write |
+| --- | --- |
+| `$...$`, `\(...\)`, `\[...\]`, `$$...$$` | nothing — no delimiters at all |
+| `\mathbb{R}^6`, `\mathbf{v}`, `\text{cart}` | `ℝ⁶`, `v`, `cart` |
+| `\in`, `\forall`, `\approx`, `\leq`, `\geq`, `\neq` | `∈`, `∀`, `≈`, `≤`, `≥`, `≠` |
+| `\times`, `\cdot`, `\pm`, `\to`, `\Rightarrow` | `×`, `⋅`, `±`, `→`, `⇒` |
+| `\omega`, `\theta`, `\Delta`, `\lambda`, `\pi` | `ω`, `θ`, `Δ`, `λ`, `π` |
+| `\sum`, `\int`, `\partial`, `\nabla`, `\infty` | `∑`, `∫`, `∂`, `∇`, `∞` |
+| `\dot{q}`, `\ddot{q}`, `\hat{x}`, `\bar{x}`, `\tilde{x}` | `q̇`, `q̈`, `x̂`, `x̄`, `x̃` (or `q_dot`, `x_hat`) |
+| `x^{T}`, `J^{-1}`, `a_{i}` | `xᵀ`, `J⁻¹`, `a_i` |
+| `\frac{a}{b}` inline | `a/b` |
+
+So: **f_cart ∈ ℝ⁶**, not `$f_{\text{cart}} \in \mathbb{R}^6$`.
+
+**Subscripts** that have no Unicode form stay as plain `_`: `τ_joint`,
+`K_p`, `v_desired`. Don't fake them. **Superscripts** use `⁰¹²³⁴⁵⁶⁷⁸⁹⁻ᵀ`
+where they exist, `^` otherwise.
+
+**Fractions and matrices go in a fenced block**, laid out spatially — that is
+where a terminal beats LaTeX anyway:
+
+```
+      τ − C(q,q̇)·q̇ − g(q)              ┌                 ┐
+q̈  =  ───────────────────         J =  │ ∂x/∂q₁   ∂x/∂q₂ │
+              M(q)                     │ ∂y/∂q₁   ∂y/∂q₂ │
+                                       └                 ┘
+```
+
+Display maths always goes in a fenced block, with symbols annotated on the
+right — units, frame, and sign convention:
 
 ```
 v_P = v_O + ω × r_OP        r_OP : O→P, body frame, m
+                            ω    : body angular velocity, rad/s
 ```
 
 Keep the derivation and the code side by side: after deriving, point at the
@@ -514,6 +553,9 @@ together. Here's the callback." *(pastes 80 lines)*
   out. Hinting is not Socratic; it is withholding the teaching too.
 - Quoting an equation instead of deriving it, or deriving it without saying what
   the alternative form would have cost.
+- **Emitting LaTeX** — `$...$`, `\mathbb{R}`, `\frac`, `\omega`, `\in`. It does not
+  render in a terminal; it arrives as literal backslashes the user has to decode.
+  Unicode instead, inline as well as in blocks (§5.3).
 - Drawing the generic textbook diagram instead of a diagram of *their* graph,
   frames, or timeline.
 - Explaining right through the closing question, so the question is already
