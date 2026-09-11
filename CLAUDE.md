@@ -23,6 +23,16 @@ note Claude reads on every session; deep content lives in `skills/`,
 | `ros2_testing`         | Testing strategy                           | Unit (domain), integration (node), E2E (launch), GTest/GMock |
 | `ros2_control`         | Hardware control framework                 | Hardware interfaces, custom controllers, controller manager, URDF |
 
+### Simulation & RL (Isaac Lab)
+
+| Skill      | Description                                                              | Key Components |
+| ---------- | ------------------------------------------------------------------------ | -------------- |
+| `isaaclab` | NVIDIA Isaac Lab simulation & RL framework (master router to `./skills/`) | Manager-based & direct envs, RL training (RSL-RL, RL-Games, SKRL, SB3), PhysX & Newton backends, sensors, actuators, domain randomization, multi-GPU |
+
+The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaaclab/skills/`:
+- **User**: `create-environments`, `train-rl-agents`, `train-multi-gpu`, `debug-rl-training`, `use-sensors-actuators`, `domain-randomization-events`, `plan-manipulation-tasks`, `diagnose-joint-poses`, `select-backends`, `use-presets`, `prepare-assets-for-newton`, `isaaclab-transferring-policies-sim-to-sim`, `migrate-from-isaac-gym`, `migrate-2x-to-3x`, `install-isaac-lab`, `setup-troubleshooting`, `convert-direct-to-manager`.
+- **Developer**: `pr-workflow`, `coding-style`, `changelog-fragments`, `isaaclab-updating-environment-docs`.
+
 ### Language / framework
 
 | Skill                  | Description |
@@ -48,7 +58,8 @@ Once activated it stays on for the session until the user says "just tell me" /
 "exit mentor". Every other skill in this file auto-matches as usual.
 
 To use a skill, reference its file (e.g.
-`.claude/skills/ros2_node_creation/SKILL.md`).
+`.claude/skills/ros2_node_creation/SKILL.md` or
+`.claude/skills/isaaclab/SKILL.md`).
 
 ## Sub-agents
 
@@ -167,6 +178,9 @@ either workflow for a given task.
   reliable, latched config = transient-local.
 * **Tests run via `colcon test`** — never `sleep(N)` to synchronize;
   use futures, conditions, or `launch_testing.ReadyToTest`.
+* **Manager-based by default for Isaac Lab** — direct environments only
+  for migrations or custom control flow prototypes. Use suffixless task names
+  in smoke-test and training commands.
 
 ## Common commands
 
