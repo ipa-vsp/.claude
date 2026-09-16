@@ -1,4 +1,4 @@
-# ROS 2 Clean Architecture Project — Claude Context
+# Architecture Context
 
 This project is set up with **Claude Skills**, **sub-agents**, and
 **rules** to facilitate ROS 2 development following **Clean
