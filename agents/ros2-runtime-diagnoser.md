@@ -1,6 +1,6 @@
 ---
 name: ros2-runtime-diagnoser
-description: ROS 2 runtime error diagnosis specialist. Use when the user reports a runtime failure by pasting a stack trace, log snippet, crash dump, or `~/.ros/log/**` file. Parses the log, reproduces the failure with live `ros2 run / launch / topic / service / action / node / param / bag` commands, isolates the root cause (node, topic, QoS, lifecycle state, TF frame, parameter, message type, plugin load), and then delegates the fix to the matching project skill (e.g. `ros2_node_creation`, `ros2_lifecycle`, `ros2_messaging`, `ros2_service_action`, `ros2_transforms`, `ros2_launch_config`, `ros2_control`, `ros2_diagnostics`, `ros2_bag`, `ros2_testing`). Does NOT handle compile/CMake errors (use `cpp-build-resolver`) or pre-PR style review (use `ros2-style-reviewer`).
+description: ROS 2 runtime error diagnosis specialist. Use when the user reports a runtime failure by pasting a stack trace, log snippet, crash dump, or `~/.ros/log/**` file. Parses the log, reproduces the failure with live `ros2 run / launch / topic / service / action / node / param / bag` commands, isolates the root cause (node, topic, QoS, lifecycle state, TF frame, parameter, message type, plugin load), and then delegates the fix to the matching project skill (e.g. `ros2-node-creation`, `ros2-lifecycle`, `ros2-messaging`, `ros2-service-action`, `ros2-transforms`, `ros2-launch-config`, `ros2-control`, `ros2-diagnostics`, `ros2-bag`, `ros2-testing`). Does NOT handle compile/CMake errors (use `cpp-build-resolver`) or pre-PR style review (use `ros2-style-reviewer`).
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 ---
@@ -73,19 +73,19 @@ ros2 control list_controllers
 
 | Log symptom | Likely root cause | Apply skill |
 |---|---|---|
-| `No subscribers / publisher` on a topic that exists | QoS mismatch (reliability / durability) | `ros2_messaging` |
-| `Parameter '<x>' not declared` | Missing `declare_parameter` | `ros2_node_creation` |
-| `Transition 'configure' failed` / `Unable to start...` | Lifecycle callback returned FAILURE / threw | `ros2_lifecycle` |
-| `Lookup would require extrapolation` / `frame ... does not exist` | TF timing or missing static TF | `ros2_transforms` |
-| `Goal rejected` / action client hangs | Server not ready / wrong type / executor blocked | `ros2_service_action` |
-| `Failed to load library` / `pluginlib` exception | Missing `pluginlib` export, plugin XML, or `<export>` in package.xml | `ros2_node_creation` (+ check package.xml) |
-| `Type mismatch` on topic/service | Two publishers with different types | `ros2_messaging` |
-| Launch fails immediately, no node spawns | Bad launch substitution / missing `find_package` | `ros2_launch_config` |
-| `Controller '...' failed to activate` | `ros2_control` resource claim conflict, bad YAML | `ros2_control` |
-| `bag ... could not be opened` / serialization error | Storage plugin / QoS override / metadata | `ros2_bag` |
-| Callback never fires under load | Single-threaded executor + blocking callback | `ros2_node_creation` (callback groups) |
-| Repeated WARN spam, no crash | Missing `diagnostic_updater` threshold | `ros2_diagnostics` |
-| Test passes locally, fails in `colcon test` | Race / `sleep()` synchronization | `ros2_testing` |
+| `No subscribers / publisher` on a topic that exists | QoS mismatch (reliability / durability) | `ros2-messaging` |
+| `Parameter '<x>' not declared` | Missing `declare_parameter` | `ros2-node-creation` |
+| `Transition 'configure' failed` / `Unable to start...` | Lifecycle callback returned FAILURE / threw | `ros2-lifecycle` |
+| `Lookup would require extrapolation` / `frame ... does not exist` | TF timing or missing static TF | `ros2-transforms` |
+| `Goal rejected` / action client hangs | Server not ready / wrong type / executor blocked | `ros2-service-action` |
+| `Failed to load library` / `pluginlib` exception | Missing `pluginlib` export, plugin XML, or `<export>` in package.xml | `ros2-node-creation` (+ check package.xml) |
+| `Type mismatch` on topic/service | Two publishers with different types | `ros2-messaging` |
+| Launch fails immediately, no node spawns | Bad launch substitution / missing `find_package` | `ros2-launch-config` |
+| `Controller '...' failed to activate` | `ros2_control` resource claim conflict, bad YAML | `ros2-control` |
+| `bag ... could not be opened` / serialization error | Storage plugin / QoS override / metadata | `ros2-bag` |
+| Callback never fires under load | Single-threaded executor + blocking callback | `ros2-node-creation` (callback groups) |
+| Repeated WARN spam, no crash | Missing `diagnostic_updater` threshold | `ros2-diagnostics` |
+| Test passes locally, fails in `colcon test` | Race / `sleep()` synchronization | `ros2-testing` |
 
 If the failure crosses layers (e.g. lifecycle node with QoS issue), invoke both skills.
 

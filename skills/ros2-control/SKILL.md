@@ -1,5 +1,5 @@
 ---
-name: ROS2 Control
+name: ros2-control
 description: ros2_control framework - hardware interfaces, custom controllers, controller manager configuration, and URDF integration (C++)
 ---
 

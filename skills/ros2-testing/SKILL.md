@@ -1,5 +1,5 @@
 ---
-name: ROS2 Testing
+name: ros2-testing
 description: ROS2 test strategies and patterns with Clean Architecture (Python & C++)
 ---
 

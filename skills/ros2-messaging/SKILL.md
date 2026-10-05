@@ -1,5 +1,5 @@
 ---
-name: ROS2 Messaging Patterns
+name: ros2-messaging
 description: ROS2 messaging patterns and best practices with Clean Architecture (Python & C++)
 ---
 

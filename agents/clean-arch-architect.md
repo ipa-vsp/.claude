@@ -15,7 +15,7 @@ right *shape* for a change before they write code.
 2. Read the relevant pieces of the repo:
    * `.claude/rules/ros2_nodes.md`
    * `.claude/rules/ros2_communication.md`
-   * `.claude/skills/ros2_node_creation/SKILL.md`
+   * `.claude/skills/ros2-node-creation/SKILL.md`
    * The existing `domain/`, `application/`, `infrastructure/`
      directories of the package in question.
 3. Sketch 2–3 alternative designs.

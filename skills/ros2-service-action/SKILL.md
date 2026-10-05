@@ -1,5 +1,5 @@
 ---
-name: ROS2 Service & Action
+name: ros2-service-action
 description: ROS2 Service and Action implementation with Clean Architecture (Python & C++)
 ---
 

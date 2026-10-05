@@ -12,16 +12,16 @@ note Claude reads on every session; deep content lives in `skills/`,
 
 | Skill                  | Description                                | Key Components |
 | ---------------------- | ------------------------------------------ | -------------- |
-| `ros2_node_creation`   | Clean-arch compliant nodes (Py / C++)      | `BaseNode` template, DI, QoS profiles |
-| `ros2_lifecycle`       | Managed (lifecycle) nodes                  | Lifecycle templates, state transitions, clients |
-| `ros2_messaging`       | Pub/Sub patterns                           | Domain-driven publishers, thread-safe buffers, synchronization |
-| `ros2_service_action`  | Services and Actions                       | Server/Client wrappers, domain use case integration |
-| `ros2_launch_config`   | Modular launch files                       | Composition, `IncludeLaunchDescription`, parameters, C++ executables |
-| `ros2_transforms`      | TF2 management                             | TF2 wrappers without leaking `geometry_msgs` into domain |
-| `ros2_diagnostics`     | Health monitoring                          | `diagnostic_updater` integration, frequency monitoring |
-| `ros2_bag`             | Data recording                             | Programmatic rosbag2 record / replay |
-| `ros2_testing`         | Testing strategy                           | Unit (domain), integration (node), E2E (launch), GTest/GMock |
-| `ros2_control`         | Hardware control framework                 | Hardware interfaces, custom controllers, controller manager, URDF |
+| `ros2-node-creation`   | Clean-arch compliant nodes (Py / C++)      | `BaseNode` template, DI, QoS profiles |
+| `ros2-lifecycle`       | Managed (lifecycle) nodes                  | Lifecycle templates, state transitions, clients |
+| `ros2-messaging`       | Pub/Sub patterns                           | Domain-driven publishers, thread-safe buffers, synchronization |
+| `ros2-service-action`  | Services and Actions                       | Server/Client wrappers, domain use case integration |
+| `ros2-launch-config`   | Modular launch files                       | Composition, `IncludeLaunchDescription`, parameters, C++ executables |
+| `ros2-transforms`      | TF2 management                             | TF2 wrappers without leaking `geometry_msgs` into domain |
+| `ros2-diagnostics`     | Health monitoring                          | `diagnostic_updater` integration, frequency monitoring |
+| `ros2-bag`             | Data recording                             | Programmatic rosbag2 record / replay |
+| `ros2-testing`         | Testing strategy                           | Unit (domain), integration (node), E2E (launch), GTest/GMock |
+| `ros2-control`         | Hardware control framework                 | Hardware interfaces, custom controllers, controller manager, URDF |
 
 ### Simulation & RL (Isaac Lab)
 
@@ -40,9 +40,9 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 | `python-patterns`      | Pythonic idioms, PEP 8, type hints, robustness |
 | `python-testing`       | pytest, TDD, fixtures, mocking, parametrization, coverage |
 | `cpp-coding-standards` | C++ Core Guidelines — modern, safe, idiomatic C++ |
-| `cpp-test`             | GoogleTest / CTest authoring, flaky-test diagnosis, coverage / sanitizers |
+| `cpp-testing`             | GoogleTest / CTest authoring, flaky-test diagnosis, coverage / sanitizers |
 | `pytorch-patterns`     | Training pipelines, model architectures, data loading |
-| `ai-first-engineer`    | Engineering operating model for teams where AI agents produce most code |
+| `ai-first-engineering`    | Engineering operating model for teams where AI agents produce most code |
 | `content-engine`       | Platform-native content systems (non-ROS, general use) |
 
 ### Learning (manual-only)
@@ -58,7 +58,7 @@ Once activated it stays on for the session until the user says "just tell me" /
 "exit mentor". Every other skill in this file auto-matches as usual.
 
 To use a skill, reference its file (e.g.
-`.claude/skills/ros2_node_creation/SKILL.md` or
+`.claude/skills/ros2-node-creation/SKILL.md` or
 `.claude/skills/isaaclab/SKILL.md`).
 
 ## Sub-agents

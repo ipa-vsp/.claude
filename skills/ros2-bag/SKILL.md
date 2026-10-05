@@ -1,5 +1,5 @@
 ---
-name: ROS2 Bag Utility
+name: ros2-bag
 description: ROS2 bag recording and analysis utilities with Clean Architecture (Python & C++)
 ---
 

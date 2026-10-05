@@ -35,8 +35,8 @@ Each lives in `skills/<name>/SKILL.md`.
 **Explicitly** — type the slash command:
 
 ```
-/ros2_node_creation
-/ros2_lifecycle    add a managed node for the gripper bridge
+/ros2-node-creation
+/ros2-lifecycle    add a managed node for the gripper bridge
 /python-testing
 ```
 
@@ -44,16 +44,16 @@ Each lives in `skills/<name>/SKILL.md`.
 
 ```
 Write a lifecycle node that owns the RC8 TCP connection
-    → loads ros2_lifecycle + ros2_node_creation
+    → loads ros2-lifecycle + ros2-node-creation
 
 The joint_states publisher drops messages under load
-    → loads ros2_messaging
+    → loads ros2-messaging
 ```
 
 **By path** — when you want a specific one and nothing else:
 
 ```
-Follow .claude/skills/ros2_control/SKILL.md and add a velocity
+Follow .claude/skills/ros2-control/SKILL.md and add a velocity
 hardware interface for the Cobotta.
 ```
 
@@ -96,16 +96,16 @@ the skill carries question banks and the common misconceptions per domain.
 
 | Skill | Use it when |
 | ----- | ----------- |
-| `ros2_node_creation` | New node (Py/C++) — `BaseNode`, dependency injection, QoS wiring |
-| `ros2_lifecycle` | Anything owning a resource: sensor, actuator, hardware bridge |
-| `ros2_messaging` | Pub/sub design, thread-safe buffers, message synchronisation |
-| `ros2_service_action` | Service/action servers & clients backed by use cases |
-| `ros2_launch_config` | Modular launch files, composition, parameter plumbing |
-| `ros2_transforms` | TF2 broadcast/lookup without leaking `geometry_msgs` into domain |
-| `ros2_diagnostics` | `diagnostic_updater`, frequency & liveliness monitoring |
-| `ros2_bag` | Programmatic rosbag2 record / replay |
-| `ros2_testing` | Unit (domain) / integration (node) / E2E (launch) test layout |
-| `ros2_control` | Hardware interfaces, custom controllers, controller manager, URDF |
+| `ros2-node-creation` | New node (Py/C++) — `BaseNode`, dependency injection, QoS wiring |
+| `ros2-lifecycle` | Anything owning a resource: sensor, actuator, hardware bridge |
+| `ros2-messaging` | Pub/sub design, thread-safe buffers, message synchronisation |
+| `ros2-service-action` | Service/action servers & clients backed by use cases |
+| `ros2-launch-config` | Modular launch files, composition, parameter plumbing |
+| `ros2-transforms` | TF2 broadcast/lookup without leaking `geometry_msgs` into domain |
+| `ros2-diagnostics` | `diagnostic_updater`, frequency & liveliness monitoring |
+| `ros2-bag` | Programmatic rosbag2 record / replay |
+| `ros2-testing` | Unit (domain) / integration (node) / E2E (launch) test layout |
+| `ros2-control` | Hardware interfaces, custom controllers, controller manager, URDF |
 
 ### Language & framework skills
 
@@ -114,9 +114,9 @@ the skill carries question banks and the common misconceptions per domain.
 | `python-patterns` | Writing/refactoring Python — idioms, PEP 8, type hints |
 | `python-testing` | pytest, TDD, fixtures, mocking, parametrisation, coverage |
 | `cpp-coding-standards` | Writing/reviewing C++ against the C++ Core Guidelines |
-| `cpp-test` | GoogleTest/CTest authoring, flaky-test diagnosis, sanitizers |
+| `cpp-testing` | GoogleTest/CTest authoring, flaky-test diagnosis, sanitizers |
 | `pytorch-patterns` | Training pipelines, model architectures, data loading |
-| `ai-first-engineer` | Process/operating-model questions for AI-heavy teams |
+| `ai-first-engineering` | Process/operating-model questions for AI-heavy teams |
 | `content-engine` | Non-ROS: platform-native written content |
 
 ### Slash commands

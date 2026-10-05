@@ -1,5 +1,5 @@
 ---
-name: ROS2 Node Creation
+name: ros2-node-creation
 description: Guide for creating ROS2 nodes following Clean Architecture principles (Python & C++)
 ---
 

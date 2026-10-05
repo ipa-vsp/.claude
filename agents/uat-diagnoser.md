@@ -60,18 +60,18 @@ ros2 control list_hardware_interfaces
 
 | Observed symptom | Likely root cause | Suggested fix skill |
 |---|---|---|
-| Result topic silent though publisher exists | QoS mismatch (reliability / durability) | `ros2_messaging` |
-| `Parameter '<x>' not declared` | Missing `declare_parameter` | `ros2_node_creation` |
-| `Transition 'configure' failed` / node stuck INACTIVE | Lifecycle callback returned FAILURE / threw | `ros2_lifecycle` |
-| `Lookup would require extrapolation` / `frame ... does not exist` | TF timing or missing static TF | `ros2_transforms` |
-| Goal rejected / action client hangs | Server not ready / wrong type / executor blocked | `ros2_service_action` |
-| `Failed to load library` / `pluginlib` exception | Missing pluginlib export / plugin XML / package.xml `<export>` | `ros2_node_creation` (+ package.xml) |
-| `Type mismatch` on topic/service | Two endpoints with different types | `ros2_messaging` |
-| Node spawns then exits immediately | Bad launch substitution / missing dep | `ros2_launch_config` |
-| `Controller '...' failed to activate` | resource claim conflict / bad YAML | `ros2_control` |
-| Callback never fires under sustained input | Single-threaded executor + blocking callback | `ros2_node_creation` (callback groups) |
-| Repeated WARN spam, no crash | Missing diagnostic threshold | `ros2_diagnostics` |
-| Passes interactively, fails under `colcon test` | Race / `sleep()` synchronization | `ros2_testing` |
+| Result topic silent though publisher exists | QoS mismatch (reliability / durability) | `ros2-messaging` |
+| `Parameter '<x>' not declared` | Missing `declare_parameter` | `ros2-node-creation` |
+| `Transition 'configure' failed` / node stuck INACTIVE | Lifecycle callback returned FAILURE / threw | `ros2-lifecycle` |
+| `Lookup would require extrapolation` / `frame ... does not exist` | TF timing or missing static TF | `ros2-transforms` |
+| Goal rejected / action client hangs | Server not ready / wrong type / executor blocked | `ros2-service-action` |
+| `Failed to load library` / `pluginlib` exception | Missing pluginlib export / plugin XML / package.xml `<export>` | `ros2-node-creation` (+ package.xml) |
+| `Type mismatch` on topic/service | Two endpoints with different types | `ros2-messaging` |
+| Node spawns then exits immediately | Bad launch substitution / missing dep | `ros2-launch-config` |
+| `Controller '...' failed to activate` | resource claim conflict / bad YAML | `ros2-control` |
+| Callback never fires under sustained input | Single-threaded executor + blocking callback | `ros2-node-creation` (callback groups) |
+| Repeated WARN spam, no crash | Missing diagnostic threshold | `ros2-diagnostics` |
+| Passes interactively, fails under `colcon test` | Race / `sleep()` synchronization | `ros2-testing` |
 
 If the failure crosses layers, name both skills.
 

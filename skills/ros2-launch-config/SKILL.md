@@ -1,5 +1,5 @@
 ---
-name: ROS2 Launch & Configuration
+name: ros2-launch-config
 description: Clean Architecture compatible ROS2 launch files and parameter management (Python)
 ---
 

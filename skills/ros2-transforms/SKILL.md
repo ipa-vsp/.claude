@@ -1,5 +1,5 @@
 ---
-name: ROS2 Transforms (TF2)
+name: ros2-transforms
 description: ROS2 TF2 and Transform management with Clean Architecture (Python & C++)
 ---
 

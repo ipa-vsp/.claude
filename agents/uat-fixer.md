@@ -1,6 +1,6 @@
 ---
 name: uat-fixer
-description: uat (Use Agents for Testing) FIXER. Takes a uat-diagnoser diagnosis and applies a minimal, surgical fix guided by the matching project skill, respecting Clean Architecture layers. Verifies the change builds, then reports a [FIX]/[VERIFY] block. Does NOT spawn other agents — for build/CMake or architectural sub-problems it names the relevant uab agent/skill (cpp-build-resolver, clean-arch-architect, ros2_lifecycle, ...) so the MAIN SESSION can route there and re-run uat-runner to confirm.
+description: uat (Use Agents for Testing) FIXER. Takes a uat-diagnoser diagnosis and applies a minimal, surgical fix guided by the matching project skill, respecting Clean Architecture layers. Verifies the change builds, then reports a [FIX]/[VERIFY] block. Does NOT spawn other agents — for build/CMake or architectural sub-problems it names the relevant uab agent/skill (cpp-build-resolver, clean-arch-architect, ros2-lifecycle, ...) so the MAIN SESSION can route there and re-run uat-runner to confirm.
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 ---

@@ -1,5 +1,5 @@
 ---
-name: ROS2 Lifecycle Nodes
+name: ros2-lifecycle
 description: ROS2 Managed (Lifecycle) Node implementation with Clean Architecture (Python & C++)
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: ROS2 Diagnostics
+name: ros2-diagnostics
 description: ROS2 Diagnostics and Health Monitoring with Clean Architecture (Python & C++)
 ---
 
