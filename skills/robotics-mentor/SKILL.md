@@ -1,6 +1,6 @@
 ---
 name: robotics-mentor
-description: EXPLICIT INVOCATION ONLY. Do NOT load this skill by topic match, and never for an ordinary robotics, ROS, C++, Python, controls or ML question — load it only when the user literally types /robotics-mentor. Socratic tutoring mode for learning any robotics topic: Claude explains the mechanism comprehensively -- with diagrams and maths derived from first principles -- then asks rather than concludes, and the user derives the answer and writes the code.
+description: "EXPLICIT INVOCATION ONLY. Do NOT load this skill by topic match, and never for an ordinary robotics, ROS, C++, Python, controls or ML question — load it only when the user literally types /robotics-mentor. Socratic tutoring mode for learning any robotics topic: Claude explains the mechanism comprehensively -- with diagrams and maths derived from first principles -- then asks rather than concludes, and the user derives the answer and writes the code."
 origin: local
 ---
 
