@@ -10,6 +10,7 @@ Claude Code configuration for this ROS 2 / Clean Architecture workspace.
 ├── skills/          # On-demand playbooks, invoked by name
 ├── agents/          # Sub-agents, opt-in via `uab` / `uat`
 ├── commands/        # Slash commands (reference cards)
+├── scripts/         # link-agents.sh — expose this config to other coding agents
 └── settings.json    # Permissions, hooks, default mode
 ```
 
@@ -272,6 +273,70 @@ You are ...
 Give it the narrowest tool set that does the job — review agents should not
 have `Write` or `Edit`. Then add it to the appropriate `uab`/`uat` routing
 table in `CLAUDE.md`, or it will never be triggered.
+
+---
+
+## Other coding agents (Codex, Antigravity, …)
+
+`.claude/` is the single source of truth. `scripts/link-agents.sh` exposes it
+to other coding agents by creating **relative symlinks** in the workspace root
+(the directory containing `.claude/`) — nothing is copied, so editing a skill,
+rule, or agent here updates every agent at once. Same pattern as
+`IsaacLab/.claude/skills -> ../.agents/skills`, just pointing the other way.
+
+```bash
+.claude/scripts/link-agents.sh codex agy          # create links for Codex + Antigravity
+.claude/scripts/link-agents.sh --list             # supported agents and their links
+.claude/scripts/link-agents.sh all                # every supported agent
+.claude/scripts/link-agents.sh --remove codex     # remove that agent's links
+```
+
+Result for `codex agy`:
+
+```
+AGENTS.md           -> .claude/CLAUDE.md
+.agents/skills      -> ../.claude/skills
+.agents/rules       -> ../.claude/rules      # Antigravity workspace rules
+.agents/workflows   -> ../.claude/commands   # Antigravity workflows
+.codex/skills       -> ../.claude/skills
+```
+
+| Agent (`name`, aliases) | Links created |
+| ----------------------- | ------------- |
+| `codex` (`openai`) — OpenAI Codex CLI | `AGENTS.md`, `.agents/skills`, `.codex/skills` |
+| `agy` (`antigravity`) — Google Antigravity | `AGENTS.md`, `.agents/{skills,rules,workflows}` |
+| `gemini` (`gemini-cli`) — Gemini CLI | `GEMINI.md`, `.gemini/{skills,agents}` |
+| `cursor` — Cursor | `AGENTS.md`, `.cursor/{skills,agents,commands}` |
+| `copilot` (`github`, `vscode`) — GitHub Copilot | `.github/copilot-instructions.md`, `.github/skills` |
+| `opencode` — OpenCode | `AGENTS.md`, `.opencode/{skills,commands}` |
+| `windsurf` — Windsurf | `AGENTS.md`, `.windsurf/{skills,rules,workflows}` |
+| `kiro` (`kiro-cli`) — Kiro | `.kiro/skills`, `.kiro/steering` |
+| `cline` — Cline | `AGENTS.md`, `.agents/skills`, `.clinerules` |
+| `amp` — Amp | `AGENTS.md`, `.agents/skills` |
+| `roo` (`roo-code`) — Roo Code | `AGENTS.md`, `.roo/{skills,rules}` |
+| `goose` — Goose | `AGENTS.md`, `.goose/skills` |
+
+Behaviour:
+
+* **Idempotent** — re-running reports `ok` for links already in place.
+* **Never clobbers** — an existing real file/dir, or a symlink pointing
+  elsewhere, is left untouched with a `WARN`.
+* **`--remove` only deletes links that point back into `.claude/`**, then
+  drops the agent's folder if it is now empty. Links are shared between
+  agents (`AGENTS.md`, `.agents/skills`), so removing one agent can remove a
+  link another still uses — re-run the script for the remaining agents.
+* **Only native formats are linked.** Codex subagents (`.codex/agents/*.toml`)
+  and Gemini CLI commands (`.toml`) use TOML, and Copilot agents need an
+  `.agent.md` suffix, so `agents/` and `commands/` are not linked for those.
+  Rules in `rules/` are auto-loaded only by Claude Code and the agents with a
+  rules link above; for the rest, `AGENTS.md` (= `CLAUDE.md`) is the entry
+  point and lists them.
+* **Agent-specific wording** — skills and `CLAUDE.md` mention Claude Code
+  features (`uab`/`uat`, slash commands, sub-agent names). Other agents read
+  them as plain instructions; tool names in agent frontmatter may not map 1:1.
+
+Add a new agent by adding one line to `MAPPINGS` (and `DESCRIPTIONS`) in the
+script: `"<link path from workspace root>:<path inside .claude/>"`.
 
 ---
 
