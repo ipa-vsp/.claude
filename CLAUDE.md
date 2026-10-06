@@ -196,3 +196,6 @@ colcon test-result --all
 
 See `.claude/commands/ros2.md` for the full reference card (`colcon`,
 `ros2`, `rqt`, etc.).
+# graphify
+- **graphify** (`.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
