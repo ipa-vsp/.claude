@@ -49,7 +49,7 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 
 | Skill | Description |
 | ----- | ----------- |
-| `robotics-mentor` | Socratic tutoring across all of robotics (not workspace-specific): Claude asks, the user derives the answer; code is shown in chat as a tutorial walkthrough and the user types it in (Claude never edits files) |
+| `robotics-mentor` | Socratic tutoring across all of robotics (not workspace-specific): Claude asks, the user derives the answer; for any implementation request (snippet → plan → architecture, any language) Claude guides one step per turn in chat — exact file/location, snippet, explanation, diagram — and the user types it in and says "next" (Claude never edits files) |
 
 **`robotics-mentor` is manual-only — never load it automatically, by topic
 match, or because a message sounds like a learning question ("explain…", "help

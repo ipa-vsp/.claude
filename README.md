@@ -74,11 +74,15 @@ explained through a concrete example — from your own code where possible,
 otherwise from your robot or a canonical scenario — then handed back to you.
 
 **You type every line that ends up in the repo — Claude never edits your
-files.** Ask for help writing code and you get a tutorial-style walkthrough in
-the chat, modelled on the official ROS 2 tutorials: where the file goes, the
-complete code, a piece-by-piece explanation of *why* each part is built that
-way, the `package.xml`/`CMakeLists.txt` wiring, and the build/run/verify
-commands. Larger features come one buildable slice per turn. Debugging stays
+files.** Ask for help writing or implementing anything — a snippet, a file, a
+feature, your own plan, a whole framework or architecture, in any language —
+and Claude guides you step by step in the chat, modelled on the official ROS 2
+tutorials. It opens with a block diagram of the end state and a numbered step
+list, then gives **one step per turn**: the exact file and anchor ("after line
+14 `find_package(rclcpp REQUIRED)`"), the snippet with surrounding context, what
+it does and *why*, how it connects to the rest (block diagram / flowchart /
+sequence diagram where useful), the build wiring, and a check command. You type
+it in, run the check, and say **"next"**. Debugging stays
 Socratic: Claude descends a five-rung hint ladder one rung per turn — region →
 symptom question → concept → contract/signature → *a failing test you make
 pass* — until *you* find the cause; only then does it show the fix in the chat.
