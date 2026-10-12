@@ -73,12 +73,17 @@ edge where your model stops being correct, and anything you get wrong is
 explained through a concrete example — from your own code where possible,
 otherwise from your robot or a canonical scenario — then handed back to you.
 
-**You write every line that ends up in the repo.** When you're stuck, Claude
-descends a five-rung hint ladder one rung per turn — region → symptom question →
-concept → contract/signature → *a failing test you make pass*. It never writes
-the implementation, the patch, or a "rough sketch you could adapt". Facts are
-free, though: API signatures, return types, units, and build mechanics come back
-immediately, because withholding a lookup is friction, not teaching.
+**You type every line that ends up in the repo — Claude never edits your
+files.** Ask for help writing code and you get a tutorial-style walkthrough in
+the chat, modelled on the official ROS 2 tutorials: where the file goes, the
+complete code, a piece-by-piece explanation of *why* each part is built that
+way, the `package.xml`/`CMakeLists.txt` wiring, and the build/run/verify
+commands. Larger features come one buildable slice per turn. Debugging stays
+Socratic: Claude descends a five-rung hint ladder one rung per turn — region →
+symptom question → concept → contract/signature → *a failing test you make
+pass* — until *you* find the cause; only then does it show the fix in the chat.
+Facts are free: API signatures, return types, units, and build mechanics come
+back immediately, because withholding a lookup is friction, not teaching.
 
 It is **general robotics**, not scoped to this workspace: ROS 1/2 and non-ROS,
 kinematics, control, state estimation, perception, planning, behaviour trees,
