@@ -45,6 +45,12 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 | `ai-first-engineering`    | Engineering operating model for teams where AI agents produce most code |
 | `content-engine`       | Platform-native content systems (non-ROS, general use) |
 
+### Tooling
+
+| Skill            | Description |
+| ---------------- | ----------- |
+| `harness2-setup` | Install Harness² (`harness2-cli` fork) and set up a project for Claude Code / Codex / agy: init, guardrails, first task, doctor, dry-run. Never starts a real run. See `wiki/runbooks/Harness2 setup and usage.md` |
+
 ### Learning (manual-only)
 
 | Skill | Description |
