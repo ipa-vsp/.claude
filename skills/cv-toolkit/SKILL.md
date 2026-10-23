@@ -5,7 +5,29 @@ description: CV/resume review toolkit with six modes - CV X-Ray, Job Description
 
 # CV Toolkit
 
-Pick the mode that matches the request (ask if unclear). Collect missing inputs first: `[industry]`, CV text, job description (JD). Never invent facts about the candidate; any suggested numbers must be labelled placeholders to verify. Don't upload CVs to unapproved services; no personal data in notes.
+Never invent facts about the candidate; any suggested numbers must be labelled placeholders to verify. Don't upload CVs to unapproved services; no personal data in notes.
+
+## Interactive protocol (mandatory)
+
+Run as a step-by-step interview. **Ask exactly ONE question per message, then stop and wait for the answer.** Never batch questions, never skip ahead, never assume an answer. Use the AskUserQuestion tool for multiple-choice questions when available; otherwise plain text.
+
+**Step 1 - Mode.** Ask which mode to run:
+`1 X-Ray` · `2 JD Decoder` · `3 ATS Optimizer` · `4 Achievement Transformer` · `5 Recruiter 6-sec Test` · `6 Final Audit` · `7 Full workflow (all, in order)`.
+
+**Step 2 - Inputs, one at a time.** Ask only for the inputs the chosen mode needs, in this order, one per message:
+1. Target industry / role (modes 1, 7).
+2. Job description - "Paste the full JD" (modes 2, 3, 5, 7; optional for 6 - ask "Do you have a JD to audit against? (yes/no)").
+3. CV - "Paste your CV as plain text" (modes 1, 3, 5, 6, 7).
+4. Bullet points - for mode 4, ask whether to use the bullets from the CV already pasted or paste new ones.
+5. Optional context, single question: "Any numbers, team sizes, budgets or results I should know? (or 'skip')".
+
+If an answer is unclear or incomplete, ask one follow-up question before moving on. Briefly confirm what was received ("Got your JD - 42 lines") before the next question.
+
+**Step 3 - Run the mode** and output the result.
+
+**Step 4 - Checkpoint.** After every mode, ask one question: "Continue to the next step, revise this one, or stop?" In full workflow (7), go through modes in order 2 → 1 → 4 → 3 → 5 → 6, reusing inputs already given, and checkpoint between each. When a mode produces rewrites (3, 4), ask "Apply these changes to the working CV? (yes / no / pick which)" and carry the accepted version into the next step.
+
+For mode 4 placeholders: ask the user to confirm or correct each `[verify: ...]` value, one bullet at a time, before finalising.
 
 ## 1. CV X-Ray Analyzer
 Inputs: industry, CV.
@@ -47,5 +69,5 @@ You are a recruiter with 200 CVs for this role and 6 seconds per CV. Tell:
 Inputs: final CV (JD optional).
 Audit every section: ATS compatibility, keyword strength, achievement quality, formatting clarity, summary impact, skills relevance, length appropriateness. Score each out of 10 (table). For each weakness give the precise fix. Goal: 90+ overall before sending; list what remains to get there.
 
-## Suggested workflow
-2 (decode JD) → 1 (X-Ray) → 4 (transform bullets) → 3 (ATS optimize) → 5 (6-second test) → 6 (final audit).
+## Full workflow order
+2 (decode JD) → 1 (X-Ray) → 4 (transform bullets) → 3 (ATS optimize) → 5 (6-second test) → 6 (final audit). Checkpoint question between each step.

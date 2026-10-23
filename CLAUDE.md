@@ -50,6 +50,7 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 | Skill            | Description |
 | ---------------- | ----------- |
 | `harness2-setup` | Install Harness² (`harness2-cli` fork) and set up a project for Claude Code / Codex / agy: init, guardrails, first task, doctor, dry-run. Never starts a real run. See `wiki/runbooks/Harness2 setup and usage.md` |
+| `rea-wiki-vault` | Portable router to this vault from any workspace (Claude `/rea-wiki-vault`, Codex `$rea-wiki-vault`, agy): `--help`, `doctor`, `bootstrap`, `init`/`map`/`graph` a target, and routes for trace / ingest / query / debug / test / experiment / adr / runbook / lint / rea. Helper `scripts/vault.py` previews by default; `--apply` writes. Defers to this vault's `CLAUDE.md`. Installer + tests stay in `rea-wiki-vault-skill/` |
 
 ### Learning (manual-only)
 
