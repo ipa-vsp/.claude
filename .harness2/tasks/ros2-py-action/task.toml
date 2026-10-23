@@ -1,0 +1,6 @@
+domain = "ros2"
+split = "train"
+workspace = "files"
+deliverable = "files"
+check = "bash check/run.sh"
+timeout = 2400

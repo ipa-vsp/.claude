@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>range_sensor_acceptance</name>
+  <version>0.0.0</version>
+  <description>Hidden acceptance tests for range_sensor_driver.</description>
+  <maintainer email="grader@example.com">grader</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>range_sensor_driver</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>sensor_msgs</depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

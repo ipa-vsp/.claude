@@ -41,6 +41,8 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 | `python-testing`       | pytest, TDD, fixtures, mocking, parametrization, coverage |
 | `cpp-coding-standards` | C++ Core Guidelines — modern, safe, idiomatic C++ |
 | `cpp-testing`             | GoogleTest / CTest authoring, flaky-test diagnosis, coverage / sanitizers |
+| `rust-patterns`        | Idiomatic Rust 2024 — ownership, typed errors (thiserror/anyhow), traits, concurrency, async, clippy |
+| `rust-testing`         | cargo test unit / integration / doc tests, proptest, mockall, llvm-cov, flaky-test guardrails |
 | `pytorch-patterns`     | Training pipelines, model architectures, data loading |
 | `ai-first-engineering`    | Engineering operating model for teams where AI agents produce most code |
 | `content-engine`       | Platform-native content systems (non-ROS, general use) |

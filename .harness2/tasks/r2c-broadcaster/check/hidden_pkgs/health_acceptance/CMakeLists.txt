@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.20)
+project(health_acceptance)
+find_package(ament_cmake REQUIRED)
+find_package(joint_health_broadcaster REQUIRED)
+find_package(controller_interface REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_health_acceptance test/test_health_acceptance.cpp TIMEOUT 120)
+  target_link_libraries(test_health_acceptance
+    joint_health_broadcaster::joint_health_broadcaster controller_interface::controller_interface
+    hardware_interface::hardware_interface pluginlib::pluginlib rclcpp::rclcpp ${diagnostic_msgs_TARGETS})
+endif()
+ament_package()

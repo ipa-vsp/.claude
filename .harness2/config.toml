@@ -1,0 +1,27 @@
+# Harness² project settings. See docs/configuration.md for every key;
+# `harness2 config show --origin` prints the resolved values and where each comes from.
+
+[executor]
+# The agent CLI that runs your tasks, and the model it runs on (provider/model).
+name = "antigravity"
+model = "antigravity-login/gemini-3.8-flash-high"
+
+[improver]
+# The agent that studies the runs and edits the harness.
+channel = "antigravity"
+model = "antigravity-login/gemini-3.8-flash-high"
+
+# The selector picks the final harness when several candidates compete, and the judge
+# grades tasks that have a rubric.md. Both use the improver's settings unless set here.
+# [selector]
+# model = "antigravity-login/gemini-3.1-pro-high"
+
+steer = "@.harness2/steer.md"
+[paths]
+# Where the harness lives, relative to the project root.
+harness = "."
+
+[run]
+max_calls = 90
+phase_width = 1
+proposer_concurrency = 1

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>twojoint_acceptance</name>
+  <version>0.0.0</version>
+  <description>Hidden acceptance tests for twojoint_hardware.</description>
+  <maintainer email="grader@example.com">grader</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>hardware_interface</depend>
+  <depend>rclcpp</depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>twojoint_hardware</test_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

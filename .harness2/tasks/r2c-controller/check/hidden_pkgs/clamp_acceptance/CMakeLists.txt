@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.20)
+project(clamp_acceptance)
+find_package(ament_cmake REQUIRED)
+find_package(clamp_forward_controller REQUIRED)
+find_package(controller_interface REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_clamp_acceptance test/test_clamp_acceptance.cpp TIMEOUT 120)
+  target_link_libraries(test_clamp_acceptance
+    clamp_forward_controller::clamp_forward_controller controller_interface::controller_interface
+    hardware_interface::hardware_interface pluginlib::pluginlib rclcpp::rclcpp ${std_msgs_TARGETS})
+endif()
+ament_package()

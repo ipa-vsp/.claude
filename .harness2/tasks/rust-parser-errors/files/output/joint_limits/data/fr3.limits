@@ -1,0 +1,4 @@
+# name      lower    upper   max_velocity
+fr3_joint1  -2.9007  2.9007  2.62
+fr3_joint2  -1.8361  1.8361  2.62
+fr3_joint3  -2.9007  2.9007  2.62  # same as joint1

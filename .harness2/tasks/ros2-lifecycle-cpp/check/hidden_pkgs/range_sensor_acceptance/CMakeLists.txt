@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.20)
+project(range_sensor_acceptance)
+find_package(ament_cmake REQUIRED)
+find_package(range_sensor_driver REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(sensor_msgs REQUIRED)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_range_acceptance test/test_range_acceptance.cpp TIMEOUT 120)
+  target_compile_features(test_range_acceptance PRIVATE cxx_std_17)
+  target_link_libraries(test_range_acceptance
+    range_sensor_driver::range_sensor_driver
+    rclcpp::rclcpp rclcpp_lifecycle::rclcpp_lifecycle ${sensor_msgs_TARGETS})
+endif()
+ament_package()

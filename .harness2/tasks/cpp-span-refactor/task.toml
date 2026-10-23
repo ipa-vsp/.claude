@@ -1,0 +1,6 @@
+domain = "cpp"
+split = "test"
+workspace = "files"
+deliverable = "files"
+check = "bash check/run.sh"
+timeout = 1200

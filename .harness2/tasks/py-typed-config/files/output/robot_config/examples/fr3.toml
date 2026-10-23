@@ -1,0 +1,18 @@
+name = "fr3"
+update_rate_hz = 500
+
+[[joints]]
+name = "fr3_joint1"
+min_position = -2.9007
+max_position = 2.9007
+max_velocity = 2.62
+
+[[joints]]
+name = "fr3_joint2"
+min_position = -1.8361
+max_position = 1.8361
+max_velocity = 2.62
+
+[controller]
+type = "position"
+gains = { p = 600.0, d = 30.0 }
