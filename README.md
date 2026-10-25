@@ -129,6 +129,22 @@ the skill carries question banks and the common misconceptions per domain.
 | `ai-first-engineering` | Process/operating-model questions for AI-heavy teams |
 | `content-engine` | Non-ROS: platform-native written content |
 
+### Writing, review & handoff skills
+
+Third-party imports (2026-10-25). Details and caveats are in `CLAUDE.md`.
+
+| Skill | Use it when |
+| ----- | ----------- |
+| `write-paper` | Turning finished results into a manuscript draft |
+| `paper-narrative` | Judging the story of a paper's figure deck (editorial criteria only; host workflow unavailable) |
+| `doc-coauthoring` | Writing a decision doc, RFC, PRD, SOP, post-mortem or report; export to `.docx` |
+| `code-review-guide` | Writing or answering human review comments (the built-in `/code-review` finds bugs) |
+| `handoff` | Ending a long thread; resuming in a new chat |
+| `prompt-master` | A long, tangled request needs structuring before work starts |
+| `humanizer` / `humanize` | Prose sounds machine-written (`humanizer` preferred) |
+| `ste` | `/ste` — Simplified Technical English for procedures and warnings |
+| `image-to-video` | Pruna AI video generation (needs paid API + uninstalled companion skills) |
+
 ### Slash commands
 
 `commands/ros2.md` → `/ros2` — reference card for `colcon`, `ros2`, `rqt`,

@@ -52,6 +52,28 @@ The `isaaclab` skill routes to specialized sub-skills under `.claude/skills/isaa
 | `harness2-setup` | Install Harness² (`harness2-cli` fork) and set up a project for Claude Code / Codex / agy: init, guardrails, first task, doctor, dry-run. Never starts a real run. See `wiki/runbooks/Harness2 setup and usage.md` |
 | `rea-wiki-vault` | Portable router to this vault from any workspace (Claude `/rea-wiki-vault`, Codex `$rea-wiki-vault`, agy): `--help`, `doctor`, `bootstrap`, `init`/`map`/`graph` a target, and routes for trace / ingest / query / debug / test / experiment / adr / runbook / lint / rea. Helper `scripts/vault.py` previews by default; `--apply` writes. Defers to this vault's `CLAUDE.md`. Installer + tests stay in `rea-wiki-vault-skill/` |
 
+### Writing, review & handoff
+
+Imported 2026-10-25 from third-party skill zips (stdlib-only Python, no network). Run
+bundled scripts by full path with `python3 -I`; the user's project folder stays the cwd.
+
+| Skill               | Description |
+| ------------------- | ----------- |
+| `write-paper`       | Draft an academic manuscript from existing outputs; outline approved first, tables/figures referenced not copied. Assumes `quality_reports/`, `output/`, `manuscripts/` and a `domain-reviewer` agent that this repo does not have — skip step 6 or substitute `code-reviewer` |
+| `paper-narrative`   | Judge a paper's whole figure deck as a handling editor (hook → mechanism → evidence → application). Built for an Open-Science Notebook host (`host.llm`, `host.delegate`, `figure-composer`) not present here: only the editorial criteria and `kernel.py` schemas are usable |
+| `doc-coauthoring`   | Three-stage co-writing (context → section-by-section → cold-reader test) with 14 blueprints (ADR-like decision doc, RFC, PRD, SOP, post-mortem, …), `doc_check.py`, `export.py` (Markdown → `.docx`/HTML) |
+| `code-review-guide` | Human code-review etiquette: intent first, rank by consequence, label `blocking:`/`suggestion:`; replying to review comments. Renamed from `code-review` so it does not shadow the built-in `/code-review` |
+| `handoff`           | Turn this conversation into `HANDOFF.md` + resume prompt; `handoff.py sweep --latest` reads `~/.claude/projects` transcripts |
+| `prompt-master`     | Restructure a rambling / dictated request into a spec before acting; `dump.py` scores, atomises and loss-checks |
+| `humanizer`         | Remove the AI "accent" from prose with `tells.py scan/compare` (fact guard, voice match). Not for code, citations or technical reference docs |
+| `humanize`          | Rule-based alternative to `humanizer` (30 rules from Wikipedia "Signs of AI writing", 0–100 score). Prefer `humanizer`; use this when its rule reports are wanted |
+| `ste`               | ASD-STE100 Simplified Technical English with `ste_check.py`. Only when asked by name (`/ste`) — useful for runbooks and safety warnings |
+| `image-to-video`    | Pruna AI single-scene video from stills + TTS. Needs a paid Pruna API key and companion skills (`p-video-2`, `pruna-api`, …) that are **not installed**; never make paid calls without approval |
+
+These write prose, not wiki notes: vault notes still follow the vault `CLAUDE.md`
+(SEEN/INFERRED labels, frontmatter, `check_notes.py`). Never let `humanizer`/`humanize`
+rewrite evidence, commands, paths or quoted values in notes.
+
 ### Learning (manual-only)
 
 | Skill | Description |
