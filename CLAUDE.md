@@ -69,6 +69,8 @@ bundled scripts by full path with `python3 -I`; the user's project folder stays 
 | `humanize`          | Rule-based alternative to `humanizer` (30 rules from Wikipedia "Signs of AI writing", 0–100 score). Prefer `humanizer`; use this when its rule reports are wanted |
 | `ste`               | ASD-STE100 Simplified Technical English with `ste_check.py`. Only when asked by name (`/ste`) — useful for runbooks and safety warnings |
 | `image-to-video`    | Pruna AI single-scene video from stills + TTS. Needs a paid Pruna API key and companion skills (`p-video-2`, `pruna-api`, …) that are **not installed**; never make paid calls without approval |
+| `brainstorming`     | Rough idea → agreed design/spec before building (explore first, one question per message, 2–3 approaches, spec sign-off). Its `plan-first` hand-off skill is absent: use plan mode, and `clean-arch-architect` under `uab` for ROS 2 designs; a resulting design decision is filed as an ADR |
+| `defuddle`          | Web page → clean Markdown via `defuddle parse <url> --md`; fits vault website ingests (save output under `raw/<target>/docs/` with URL + sha256). The `defuddle` CLI is **not installed** (npm `defuddle` 0.19.6 available): ask before `npm install -g defuddle`; until then use WebFetch |
 
 These write prose, not wiki notes: vault notes still follow the vault `CLAUDE.md`
 (SEEN/INFERRED labels, frontmatter, `check_notes.py`). Never let `humanizer`/`humanize`

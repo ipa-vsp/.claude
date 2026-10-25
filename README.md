@@ -144,6 +144,8 @@ Third-party imports (2026-10-25). Details and caveats are in `CLAUDE.md`.
 | `humanizer` / `humanize` | Prose sounds machine-written (`humanizer` preferred) |
 | `ste` | `/ste` — Simplified Technical English for procedures and warnings |
 | `image-to-video` | Pruna AI video generation (needs paid API + uninstalled companion skills) |
+| `brainstorming` | A feature/system idea is still fuzzy; agree a spec before building |
+| `defuddle` | Pull a web page as clean Markdown (CLI not installed yet) |
 
 ### Slash commands
 
