@@ -1,6 +1,7 @@
 # `.claude/` — Skills, Agents & Rules
 
-Claude Code configuration for this ROS 2 / Clean Architecture workspace.
+Claude Code configuration for this ROS 2 / Rust robotics workspace, built on
+Clean Architecture.
 
 ```
 .claude/
@@ -117,6 +118,15 @@ the skill carries question banks and the common misconceptions per domain.
 | `ros2-testing` | Unit (domain) / integration (node) / E2E (launch) test layout |
 | `ros2-control` | Hardware interfaces, custom controllers, controller manager, URDF |
 
+### Rust (added for the Arche Rust migration)
+
+| Skill | Use for | References |
+|---|---|---|
+| `rust-architecture` | crate layering, public API design, typed errors, plugin traits, static registry | `api-checklist.md` (incl. ADR template), `plugin-registry.md` |
+| `rust-ffi` | `cxx` bridges to C++ libraries (Pinocchio, coal, OMPL), `build.rs`, `unsafe` policy, sanitizers | `cxx-bridge-patterns.md`, `build-and-sanitizers.md` |
+| `rust-testing` | float tolerances, SE(3)/Lie-group checks, FD Jacobians, property tests, golden/parity and statistical oracles | `numerical-oracles.md`, `golden-and-parity.md` |
+| `robotics-planning-benchmark` | reproducible planner / IK / collision benchmarks, metrics, reports | `metrics.md`, `report-template.md` |
+
 ### Language & framework skills
 
 | Skill | Use it when |
@@ -198,6 +208,10 @@ Conventions:
 * **Trivial edits skip review** — docs, comments, whitespace.
 * **One architect pass per feature**, not per file.
 
+There is no Rust-specific reviewer agent yet. Under `uab`, Rust changes go
+to `code-reviewer` with the `rust-architecture` / `rust-testing` skills as
+the checklist.
+
 ### `uat` — run & test loop
 
 Driven by the main session, which passes each report to the next agent
@@ -236,6 +250,9 @@ No invocation needed; these constrain every response.
 | `robot_specific.md` | Robot-level overrides — **replace per project** |
 | `colcon_build.md` | Workspace build standards and execution directory constraints |
 
+Clean Architecture layering also applies to Rust crates; the crate-level
+mapping is in `skills/rust-architecture/SKILL.md`.
+
 The non-negotiables they encode:
 
 * Domain code never imports `rclpy`, `rclcpp`, or any `*_msgs`. If it needs
@@ -264,6 +281,9 @@ description: One line. This is what Claude matches against, so be specific
 # My Skill
 ...body: patterns, templates, do/don't...
 ```
+
+Include *When to Use* and *When NOT to Use* sections before the guidance
+to make the skill’s scope explicit.
 
 The directory name is the slash command (`/my_skill`). Add a row to the
 table in `CLAUDE.md` so it shows up in the session orientation.

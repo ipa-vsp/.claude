@@ -87,6 +87,16 @@ match, or because a message sounds like a learning question ("explain…", "help
 me understand…", "why does…"). Only a literal `/robotics-mentor` activates it.**
 Once activated it stays on for the session until the user says "just tell me" /
 "exit mentor". Every other skill in this file auto-matches as usual.
+### Rust
+
+| Skill                         | Description |
+| ----------------------------- | ----------- |
+| `rust-architecture`           | Crate layering, public API design, typed errors, plugin traits, static registry |
+| `rust-ffi`                    | Safe C++ interop with `cxx` (Pinocchio, coal, OMPL), `build.rs`, `unsafe` policy, sanitizers |
+| `rust-testing`                | Numerical/robotics tests: tolerances, SE(3), FD Jacobians, property, golden/parity, statistical oracles |
+| `robotics-planning-benchmark` | Reproducible planner / IK / collision benchmarks, metrics, reports |
+
+Skills may carry a `references/` folder; `SKILL.md` links to it.
 
 To use a skill, reference its file (e.g.
 `.claude/skills/ros2-node-creation/SKILL.md` or
@@ -223,6 +233,13 @@ source install/setup.bash
 # Test
 colcon test --packages-select <pkg>
 colcon test-result --all
+
+# Rust workspace (run in src/rust/)
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --locked -- -D warnings
+cargo test --workspace --all-targets --locked
+python3 -I tools/check_layering.py
+cargo deny check -A unused-wrapper
 ```
 
 See `.claude/commands/ros2.md` for the full reference card (`colcon`,
