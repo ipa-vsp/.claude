@@ -1,12 +1,33 @@
 ---
 name: cpp-coding-standards
 description: C++ coding standards based on the C++ Core Guidelines (isocpp.github.io). Use when writing, reviewing, or refactoring C++ code to enforce modern, safe, and idiomatic practices.
-origin: ECC
+metadata:
+  origin: ECC
 ---
 
 # C++ Coding Standards (C++ Core Guidelines)
 
 Comprehensive coding standards for modern C++ (C++17/20/23) derived from the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). Enforces type safety, resource safety, immutability, and clarity.
+
+## Compatibility and Concurrent API Design
+
+Use the project's C++ standard and compiler configuration. `std::scoped_lock`
+requires C++17; `std::span` and `std::jthread` require C++20. Do not raise the
+minimum language version merely to copy an example.
+
+- Use RAII locks: `std::lock_guard` is suitable for one mutex,
+  `std::scoped_lock` for several, and `std::unique_lock` for condition-variable
+  waits. Wait on a predicate protected by the same mutex as its writers.
+- Specify whether shutdown drains or cancels pending work. Stop accepting new
+  work before shutdown, wake sleepers, and join owned threads. Release queue
+  locks before executing callbacks; handle task failures and partial thread
+  creation without leaking workers or throwing from a destructor.
+- Use non-owning views such as `std::span<const T>` for contiguous input when
+  available; document lifetime requirements. Mark results `[[nodiscard]]` when
+  ignoring them is likely a correctness bug.
+- Enable appropriate conversion warnings in the project's build. An explicit
+  cast silences a warning but does not prove the value fits: check bounds before
+  narrowing, or keep a wider type.
 
 ## When to Use
 

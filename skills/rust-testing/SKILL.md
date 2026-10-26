@@ -1,6 +1,6 @@
 ---
 name: rust-testing
-description: Testing numerical and robotics Rust code — float tolerances, SE(3)/quaternion/Lie-group comparisons, finite-difference Jacobian checks, property tests, seeded randomness, golden files and C++ parity tests, statistical oracles for stochastic solvers. Use when writing or fixing Rust tests, porting C++ gtests to Rust, choosing tolerances, adding fixtures, or diagnosing flaky numeric tests.
+description: Testing numerical and robotics Rust code — float tolerances, SE(3)/quaternion/Lie-group comparisons, finite-difference Jacobian checks, property tests, seeded randomness, golden files and C++ parity tests, statistical oracles for stochastic solvers. Use when writing or fixing Rust tests, porting C++ gtests to Rust, choosing tolerances, adding fixtures, or diagnosing flaky numeric tests; also the general cargo test workflow — unit/integration/doc layout, error-contract and CLI tests, mockall mocks, concurrency tests without sleeps, coverage (cargo llvm-cov).
 ---
 
 # Numerical and Robotics Testing in Rust
@@ -23,6 +23,7 @@ shared helpers live in `rust/crates/arche-testkit` (dev-dependency only).
 
 - Timing and solver comparison studies → `robotics-planning-benchmark`
 - FFI-specific memory testing (sanitizers) → `rust-ffi`
+- Implementing features without test changes → `rust-patterns`
 - C++ tests of the legacy packages → `cpp-testing`
 - ROS 2 launch/integration tests → `ros2_testing`
 
@@ -171,6 +172,116 @@ fn two_link_fk_matches_cpp() {
    fixtures.
 4. Never "fix" a flake with retries or by widening a tolerance without
    a recorded reason.
+
+## General Cargo Test Workflow
+
+TDD loop: red → green → refactor. Determinism everywhere: no sleeps, no
+wall-clock, no shared global state between tests.
+
+### Error Contracts, CLI Behaviour and Concurrent Progress
+
+- Assert error variants and relevant fields, plus `source()` for wrapped
+  errors. Test required trait bounds at compile time when they belong to the
+  public contract. Avoid exact OS error wording or incidental debug formatting.
+- Run CLI integration tests with the Cargo-built binary
+  (`env!("CARGO_BIN_EXE_<binary-name>")`). Use isolated temporary directories
+  and assert exit status, stdout/stderr roles and useful diagnostics.
+- Use `recv_timeout`, condition predicates or completion signals for bounded
+  waits. To verify parallelism, have jobs announce readiness and wait on a
+  releasable gate; require all readiness signals before release. A bare
+  barrier can deadlock the suite when the implementation accidentally
+  serialises jobs.
+- Ensure failure paths release gates and join threads. Use an outer process
+  timeout for deadlock-prone tests; timing out an assertion does not
+  interrupt a blocked destructor or join.
+- When panic resilience is promised, queue a panicking job followed by a
+  normal job in a single-worker pool and verify bounded completion. Check
+  drain/cancel behaviour on explicit shutdown and `Drop` according to the
+  documented contract.
+- Run unit, integration and doc tests under the project's feature matrix;
+  keep build artefacts out of committed fixtures without deleting user data.
+
+### Testing errors (match the variant, not the message)
+
+```rust
+#[test]
+fn missing_field_is_reported_with_line() {
+    let err = parse("name=\n").unwrap_err();
+    assert!(matches!(err, ParseError::MissingField { line: 1, .. }), "got {err:?}");
+}
+```
+
+### Tests returning `Result`, table-driven tests
+
+```rust
+#[test]
+fn parses_valid_input() -> Result<(), Box<dyn std::error::Error>> {
+    let cfg = parse("rate=10\n")?;
+    assert_close(cfg.rate, 10.0, Tolerance::abs(1e-12));
+    Ok(())
+}
+
+#[test]
+fn normalizes_names() {
+    let cases = [("  Foo ", "foo"), ("BAR", "bar"), ("", "")];
+    for (input, expected) in cases {
+        assert_eq!(normalize(input), expected, "input: {input:?}");
+    }
+}
+```
+
+### Mock a trait (mockall)
+
+```rust
+#[cfg_attr(test, mockall::automock)]
+pub trait Clock { fn now_ms(&self) -> u64; }
+
+#[test]
+fn times_out_after_deadline() {
+    let mut clock = MockClock::new();
+    clock.expect_now_ms().return_const(5_000u64);
+    assert!(is_expired(&clock, 1_000));
+}
+```
+
+Prefer hand-written fakes for stateful collaborators; inject time and I/O
+through traits.
+
+### Concurrency tests without sleeps
+
+```rust
+use std::sync::mpsc;
+use std::time::Duration;
+
+#[test]
+fn worker_processes_job() {
+    let (done_tx, done_rx) = mpsc::channel();
+    let pool = Pool::new(2);
+    pool.execute(move || done_tx.send(42).unwrap());
+    // bounded wait on a signal, not a fixed sleep
+    assert_eq!(done_rx.recv_timeout(Duration::from_secs(5)).unwrap(), 42);
+}
+```
+
+### Running tests and coverage
+
+```bash
+cargo test parser::                 # filter by path
+cargo test -- --nocapture           # show println!
+cargo test -- --test-threads=1      # diagnose shared-state flakiness
+cargo nextest run                   # per-test processes (if installed)
+cargo llvm-cov --all-targets --fail-under-lines 80
+cargo llvm-cov --html               # target/llvm-cov/html
+```
+
+### DO / DON'T
+
+- DO name tests after behaviour (`rejects_negative_rate`), one behaviour per test
+- DO use `tempfile::tempdir()` for filesystem tests; never fixed paths
+- DO run `cargo clippy --all-targets` so test code is linted too
+- DON'T `#[ignore]` a flaky test without an issue reference
+- DON'T `unwrap()` in helpers without context — use `expect("why")`
+- DON'T test private implementation details from integration tests
 
 ## References
 

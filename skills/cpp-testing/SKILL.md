@@ -1,12 +1,31 @@
 ---
 name: cpp-testing
 description: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or flaky tests, or adding coverage/sanitizers.
-origin: ECC
+metadata:
+  origin: ECC
 ---
 
 # C++ Testing (Agent Skill)
 
 Agent-focused testing workflow for modern C++ (C++17/20) using GoogleTest/GoogleMock with CMake/CTest.
+
+## Bounded Concurrency Checks and Toolchain Selection
+
+- Synchronize on observable completion using futures, predicate-based condition
+  variables, or latches. Give waits a deadline and arrange cleanup on assertion
+  failure; destroying a joinable `std::thread` terminates the process.
+- To prove parallel execution, wait for each worker to report that it started
+  before releasing any worker. A barrier alone can hang forever when the pool
+  is broken; use a timeout-capable gate and always release blocked jobs.
+- Test the promised shutdown policy, submission after shutdown, and failure
+  handling. Do not require draining when cancellation is the documented contract.
+- Run ThreadSanitizer for relevant concurrency changes when supported. Keep TSan
+  and ASan in separate builds and distinguish runtime/toolchain failures from
+  race reports.
+- Run clang-tidy with the project's compilation database (`-p build`). If Clang
+  cannot locate the selected GCC standard library, discover that compiler's
+  installation directory and pass `--gcc-install-dir` where supported. Do not
+  hard-code an architecture, compiler version, or system path.
 
 ## When to Use
 

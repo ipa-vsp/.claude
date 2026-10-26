@@ -7,6 +7,21 @@ description: Clean Architecture compatible ROS2 launch files and parameter manag
 
 This skill provides a guide for creating modular and reusable ROS2 launch files, which are written in Python for both C++ and Python nodes.
 
+## Distribution and Installation Portability
+
+- Resolve launch, URDF, and parameter files from installed package shares; avoid
+  developer-home paths and assumptions about the source checkout's location.
+- Declare launch arguments for deployment choices such as namespaces, device
+  paths, parameter files, and simulation time. Preserve the user's ROS
+  distribution and verify version-sensitive launch or controller APIs locally.
+- Keep YAML node keys aligned with the actual node name and namespace. Use
+  typed launch parameter values when substitutions would otherwise be strings.
+- Install launch and configuration resources through the package's build system;
+  test launching from the installed package, outside the source directory.
+- Sequence lifecycle transitions and controller startup on observed readiness
+  or state changes. A process-start event does not prove services or hardware
+  are ready; avoid fixed delays as a substitute for readiness checks.
+
 ## Launch File Structure
 
 ```
