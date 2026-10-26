@@ -1,12 +1,42 @@
 ---
 name: python-patterns
 description: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.
-origin: ECC
+metadata:
+  origin: ECC
 ---
 
 # Python Development Patterns
 
 Idiomatic Python patterns and best practices for building robust, efficient, and maintainable applications.
+
+## Version-Aware Types and Validated Values
+
+Respect `requires-python` and the project's type checker. Builtin generics are
+available from Python 3.9, union syntax from 3.10, `StrEnum` from 3.11, and PEP 695
+from 3.12. Keep compatible syntax when supporting older interpreters.
+
+```python
+# Python 3.12+; keep TypeVar syntax for projects targeting older versions.
+from collections.abc import Sequence
+
+
+def first_or_default[T](items: Sequence[T], default: T) -> T:
+    return items[0] if items else default
+```
+
+- Use `@dataclass(frozen=True, slots=True)` for immutable value objects when
+  supported and appropriate; mutable entities remain valid. Frozen dataclasses
+  do not recursively freeze their fields.
+- Use `StrEnum` for string-valued enumerations when the supported version allows
+  it. Keep serialization values explicit if they are part of an external API.
+- Validate decoded configuration before constructing domain types. Type hints
+  do not validate runtime input. Reject booleans when a numeric field excludes
+  them, and check finiteness and bounds when required by the domain.
+- Preserve causes with `raise DomainError(...) from err`; catch the specific
+  parsing or I/O failure. Use `object` plus narrowing at untrusted boundaries
+  instead of allowing unchecked `Any` to spread through the application.
+- Run the project's type checker against its supported Python versions; adopt
+  strict checking where the project requires it rather than changing policy.
 
 ## When to Activate
 

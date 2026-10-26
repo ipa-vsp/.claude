@@ -7,6 +7,47 @@ description: Guide for creating ROS2 nodes following Clean Architecture principl
 
 This skill is used to create ROS2 nodes that adhere to Clean Architecture principles. It covers both Python and C++ implementations.
 
+## Portable Packaging and Dependency Boundaries
+
+Inspect the project's ROS distribution, Python version, and C++ standard before
+choosing APIs. Keep domain entities and use cases independent of ROS imports;
+construct adapters and inject dependencies at the application boundary.
+
+### Python package discovery
+
+For an `ament_python` package, keep the package name consistent across
+`package.xml`, Python packaging metadata, the resource marker, and entry points.
+Install the resource marker to `share/ament_index/resource_index/packages`, the
+manifest to `share/<package>`, and launch/configuration files into package share.
+Configure scripts under `$base/lib/<package>` in `setup.cfg` so `ros2 run` can
+find console entry points. Use package discovery that includes nested modules.
+
+Declare pytest dependencies in package metadata and `package.xml`. A test extra
+such as `extras_require={'test': ['pytest']}` declares optional dependencies but
+does not by itself guarantee colcon selects pytest. Check the installed colcon
+behavior, select `--python-testing pytest` when necessary, and verify a nonzero
+collected test count. See [colcon's test options](https://colcon.readthedocs.io/en/main/reference/verb/test.html).
+
+### C++ library and component exports
+
+Link imported dependency targets where the installed packages export them.
+Keep public headers, include directories, and transitive dependencies available
+to downstream consumers. The export-set name must match:
+
+```cmake
+install(TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp)
+```
+
+For composable nodes, register the class and its component library with the
+installed `rclcpp_components` API. Verify a downstream package can find and link
+the installed target, and that components and executables are discoverable.
+
 ## Directory Structure
 
 ```
@@ -91,10 +132,9 @@ class BaseNode(Node, ABC):
 
 ### 2. Concrete Node Implementation
 
-```python
-# ... (Same as before, but with English comments) ...
-# See previous version for logic, just translate comments
-```
+Construct the concrete node with injected use cases or ports. Declare its
+parameters, validate them, and register ROS callbacks that translate messages
+before invoking the use case. Keep business logic outside the node.
 
 ## C++ Implementation
 

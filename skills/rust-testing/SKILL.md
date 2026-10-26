@@ -1,12 +1,35 @@
 ---
 name: rust-testing
 description: Use when writing/updating/fixing Rust tests - cargo test unit/integration/doc tests, test layout, proptest property tests, mockall mocks, coverage (cargo llvm-cov), and diagnosing failing or flaky tests.
-origin: local (ECC-style)
+metadata:
+  origin: local (ECC-style)
 ---
 
 # Rust Testing (Agent Skill)
 
 Agent-focused testing workflow for Rust crates with `cargo test`.
+
+## Error Contracts, CLI Behavior, and Concurrent Progress
+
+- Assert error variants and relevant fields, plus `source()` for wrapped errors.
+  Test required trait bounds at compile time when they belong to the public
+  contract. Avoid exact OS error wording or incidental debug formatting.
+- Run CLI integration tests with the Cargo-built binary
+  (`env!("CARGO_BIN_EXE_<binary-name>")`). Use isolated temporary directories and
+  assert exit status, stdout/stderr roles, and useful diagnostics.
+- Use `recv_timeout`, condition predicates, or completion signals for bounded
+  waits. To verify parallelism, have jobs announce readiness and wait on a
+  releasable gate; require all readiness signals before release. A bare barrier
+  can deadlock the suite when the implementation accidentally serializes jobs.
+- Ensure failure paths release gates and join threads. Use an outer process
+  timeout for deadlock-prone tests; timing out an assertion does not interrupt
+  a blocked destructor or join.
+- When panic resilience is promised, queue a panicking job followed by a normal
+  job in a single-worker pool and verify bounded completion. Check drain/cancel
+  behavior on explicit shutdown and Drop according to the documented contract.
+- Add property tests for semantic invariants and focused boundary cases. Run
+  unit, integration, and documentation tests under the project's feature matrix;
+  keep build artifacts out of committed fixtures without deleting user data.
 
 ## When to Use
 

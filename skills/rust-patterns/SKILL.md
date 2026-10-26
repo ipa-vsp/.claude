@@ -1,12 +1,38 @@
 ---
 name: rust-patterns
 description: Idiomatic Rust (2024 edition) for writing, reviewing, or refactoring Rust code - ownership and borrowing, typed error handling (thiserror/anyhow), traits and generics, concurrency, async (tokio), unsafe policy, clippy. Use when writing or reviewing any .rs file or Cargo.toml.
-origin: local (ECC-style; ECC ships rust-reviewer / rust-build-resolver agents but no Rust skill)
+metadata:
+  origin: local (ECC-style; ECC ships rust-reviewer / rust-build-resolver agents but no Rust skill)
 ---
 
 # Rust Patterns (Agent Skill)
 
 Idioms and guardrails for modern Rust (edition 2024, stable toolchain) so code compiles cleanly under `cargo clippy -- -D warnings` and reads like the standard library.
+
+## Portable Contracts, Errors, and Worker Lifetimes
+
+Respect the crate's edition, MSRV, feature flags, dependency policy, and configured
+lints. Pedantic Clippy checks are optional project policy, not a reason to change
+public APIs or forbid every justified invariant assertion.
+
+- Public library errors should be matchable types with useful fields and an
+  error source chain. Require `Send + Sync + 'static` only when callers need
+  errors to cross thread/task boundaries. Use `thiserror` when allowed or
+  implement `Display` and `Error` directly for dependency-free crates.
+- Validate external input with `Result`; include location/field information where
+  useful. Use `let ... else` for clear early exits and `#[must_use]` where ignored
+  success values are likely bugs. `Result` already carries a must-use contract.
+- Worker pools must define zero-capacity behavior, submission after shutdown,
+  queue bounds, and whether accepted jobs drain or cancel. Close all submission
+  paths before joining workers; handle partial thread creation as a fallible
+  operation instead of retrying with a panicking spawn API.
+- Release the receiver/queue mutex before running a job. If workers are required
+  to survive panicking jobs, isolate execution with `catch_unwind` under an
+  unwinding panic strategy. `AssertUnwindSafe` needs an invariant justification;
+  it cannot recover aborting panics. Report failures according to the API.
+- Recover a poisoned mutex only after checking the protected invariant; blanket
+  `into_inner()` recovery can expose corrupted state. Handle join failures and
+  avoid a second panic during destruction or joining the current worker thread.
 
 ## When to Use
 
@@ -161,12 +187,14 @@ thread::scope(|s| {
 // Graceful shutdown: drop the Sender, workers exit when recv() returns Err
 let (tx, rx) = mpsc::channel::<Job>();
 let rx = Arc::new(Mutex::new(rx));
-// ... spawn workers that loop on rx.lock().unwrap().recv()
+// Receive while holding the receiver guard; release it before executing a job.
 drop(tx); // signals shutdown
 // join every JoinHandle in Drop
 ```
 
-- Never hold a `MutexGuard` across a blocking call or `.await`.
+- Never hold a `MutexGuard` across `.await` or arbitrary user work. A shared
+  single-consumer receiver may need a guard during `recv`; release it before
+  running the received job so workers can execute concurrently.
 - Handle `PoisonError` explicitly (`lock().map_err(..)`) in libraries, or document why `unwrap` is sound.
 - `Arc<T>` for shared ownership, `Arc<Mutex<T>>`/`RwLock` only when shared mutation is necessary; atomics for counters.
 - Implement `Drop` to join worker threads so no thread outlives its pool.

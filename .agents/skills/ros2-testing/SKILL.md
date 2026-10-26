@@ -7,6 +7,28 @@ description: ROS2 test strategies and patterns with Clean Architecture (Python &
 
 This skill provides test strategies for ROS2 applications adhering to Clean Architecture principles, covering Unit, Integration, and E2E tests in both Python and C++.
 
+## Discovery, Executor Ownership, and Cleanup
+
+- Run ROS package tests through `colcon test --packages-select <package>` and
+  inspect `colcon test-result --all`. Verify that the intended tests were
+  collected; a successful command with zero tests is not validation.
+- For `ament_python`, declare pytest dependencies and verify test-runner
+  selection. Use `--python-testing pytest` when needed by the installed colcon;
+  neither a test extra nor a deprecated setuptools field proves discovery.
+- Wait for services, action servers, and matching topic endpoints before sending
+  one-shot requests. Spin until a predicate/future completes with a deadline.
+- A node must belong to only one executor. When a test already owns an executor,
+  drive that executor rather than calling a helper that attaches the node to a
+  second executor. Ensure both the producer and observer receive callback time.
+- Register cleanup before assertions: stop executors/workers, destroy nodes, and
+  shut down the test context even on failure. Guard single-use promises against
+  repeated message callbacks.
+- `ReadyToTest()` releases launch tests; it does not prove application readiness.
+  Use `generate_test_description()` for launch_testing tests, bounded readiness
+  checks inside the tests, and process-exit assertions where relevant.
+- Test pure domain logic without ROS initialization; exercise adapters, lifecycle
+  transitions, cancellation, and middleware behavior at the integration layer.
+
 ## Test Pyramid
 
 ```
@@ -135,7 +157,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch_testing.actions import ReadyToTest
 
-def generate_launch_description():
+def generate_test_description():
     # Launch system under test
     app_node = Node(package='my_robot', executable='main_node')
 

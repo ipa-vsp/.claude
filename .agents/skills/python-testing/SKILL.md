@@ -1,12 +1,31 @@
 ---
 name: python-testing
 description: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.
-origin: ECC
+metadata:
+  origin: ECC
 ---
 
 # Python Testing Patterns
 
 Comprehensive testing strategies for Python applications using pytest, TDD methodology, and best practices.
+
+## Deterministic Async Tests and Meaningful Assertions
+
+- Wait on `threading.Event`, conditions, futures, or asyncio primitives with
+  deadlines. Fixed sleeps do not establish readiness. If polling an external
+  system is necessary, use a monotonic deadline and a bounded polling interval.
+- Register cleanup before assertions using fixtures or `try/finally`. Release
+  blocked workers, cancel and await async tasks, and join owned threads so a
+  failed assertion does not leave background work running into another test.
+- Test configuration boundaries with `tmp_path`: malformed input, missing data,
+  invalid types and bounds. Assert structured errors and `__cause__` where part
+  of the contract; avoid OS-specific error text.
+- Use parametrization for distinct boundary cases and property tests for actual
+  invariants. Coverage identifies untested paths; it does not establish that
+  assertions would detect incorrect behavior.
+- Keep test annotations compatible with the project's minimum Python version.
+  Follow configured test and coverage policies without imposing an arbitrary
+  coverage threshold on unrelated projects.
 
 ## When to Activate
 

@@ -7,11 +7,30 @@ description: ROS2 messaging patterns and best practices with Clean Architecture 
 
 This skill covers ROS2 messaging patterns adhering to Clean Architecture principles, protecting the domain layer from ROS2 dependencies.
 
+## Message Validation, QoS, and Callback Concurrency
+
+- Convert messages to domain values in adapters. Validate parallel arrays,
+  missing optional fields, timestamps, and numeric bounds before use; do not
+  silently truncate mismatched arrays with `zip` or invent zero measurements.
+- Select QoS by semantics and peer compatibility: sensor streams often use
+  best effort, commands commonly require reliability, and retained configuration
+  may need transient-local durability. System-default QoS does not promise a
+  particular reliability policy across deployments.
+- Synchronization requires compatible QoS, a common time basis, and a deliberate
+  queue/slop policy. Approximate-time pairing does not imply equal timestamps.
+- Protect shared callback state with appropriately scoped locks or a thread-safe
+  handoff; release locks before invoking domain callbacks. Bound queues and make
+  dropped-message or back-pressure behavior explicit.
+- Keep callback-group and subscription objects alive for the intended lifetime.
+  Verify publisher/subscriber discovery before one-shot integration-test sends.
+
 ## Publisher/Subscriber Patterns
 
 ### 1. Domain-Driven Publisher (Python)
 
-See previous Python example.
+Create publishers and subscriptions in the ROS adapter and retain their handles.
+Translate between message types and domain entities at the callback boundary;
+pass domain values to the injected use case or observer.
 
 ### 2. Domain-Driven Publisher (C++)
 

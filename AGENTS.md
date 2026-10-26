@@ -12,7 +12,7 @@ note Claude reads on every session; deep content lives in `skills/`,
 
 | Skill                  | Description                                | Key Components |
 | ---------------------- | ------------------------------------------ | -------------- |
-| `ros2-node-creation`   | Clean-arch compliant nodes (Py / C++)      | `BaseNode` template, DI, QoS profiles |
+| `ros2-node-creation`   | Clean-arch compliant nodes (Py / C++)      | Node templates, packaging, DI, QoS profiles |
 | `ros2-lifecycle`       | Managed (lifecycle) nodes                  | Lifecycle templates, state transitions, clients |
 | `ros2-messaging`       | Pub/Sub patterns                           | Domain-driven publishers, thread-safe buffers, synchronization |
 | `ros2-service-action`  | Services and Actions                       | Server/Client wrappers, domain use case integration |
@@ -21,7 +21,7 @@ note Claude reads on every session; deep content lives in `skills/`,
 | `ros2-diagnostics`     | Health monitoring                          | `diagnostic_updater` integration, frequency monitoring |
 | `ros2-bag`             | Data recording                             | Programmatic rosbag2 record / replay |
 | `ros2-testing`         | Testing strategy                           | Unit (domain), integration (node), E2E (launch), GTest/GMock |
-| `ros2-control`         | Hardware control framework                 | Hardware interfaces, custom controllers, controller manager, URDF |
+| `ros2-control`         | Hardware control framework                 | Hardware interfaces, controllers, API compatibility, URDF |
 
 ### Simulation & RL (Isaac Lab)
 

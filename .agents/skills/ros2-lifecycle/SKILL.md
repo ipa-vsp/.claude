@@ -5,6 +5,23 @@ description: ROS2 Managed (Lifecycle) Node implementation with Clean Architectur
 
 # ROS2 Lifecycle Nodes Skill
 
+## Resource Ownership Across Transitions
+
+- Declare parameters in construction; validate configuration and acquire
+  resources during configure. A failed configure must release partially
+  acquired resources and leave the node safe to configure again.
+- Activate managed publishers and start work only after activation succeeds.
+  Ordinary subscriptions, timers, and services are not automatically disabled
+  by lifecycle state; cancel or gate them explicitly while inactive.
+- Deactivate by stopping work before disabling publishers. Cleanup releases
+  configured resources; shutdown handles both active and inactive states.
+  Make cleanup safe after partial initialization and repeated transitions.
+- In rclpy, preserve the lifecycle base callbacks' managed-entity behavior when
+  overriding transitions, or explicitly perform equivalent management. Verify
+  the installed API rather than assuming Python and C++ callbacks are identical.
+- Test configure/activate/deactivate/cleanup/reconfigure, rejected configuration,
+  and shutdown. Assert state and resource behavior using bounded executor waits.
+
 ## Lifecycle States
 
 ```
@@ -39,7 +56,10 @@ description: ROS2 Managed (Lifecycle) Node implementation with Clean Architectur
 
 ## Python Implementation
 
-See previous Python example.
+Subclass `rclpy.lifecycle.LifecycleNode` and implement the required transition
+callbacks with `TransitionCallbackReturn`. Create resources in configure and
+release them in cleanup; preserve managed-entity activation through the base
+callbacks. Keep timer and subscription activity explicitly tied to state.
 
 ## C++ Implementation
 

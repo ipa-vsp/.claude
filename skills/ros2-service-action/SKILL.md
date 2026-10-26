@@ -7,6 +7,29 @@ description: ROS2 Service and Action implementation with Clean Architecture (Pyt
 
 This skill provides a guide for implementing ROS2 Services and Actions adhering to Clean Architecture principles.
 
+## Responsive Actions and Safe Execution Ownership
+
+Use services for bounded request/response work and actions for long-running,
+cancelable work with feedback. Convert goals and results at the adapter boundary;
+keep the use case independent of ROS goal handles.
+
+- A blocking rclpy execute callback needs executor capacity and callback-group
+  concurrency for cancel requests and other callbacks. A common configuration
+  is a retained `ReentrantCallbackGroup` with a `MultiThreadedExecutor`; merely
+  adding threads while retaining one mutually exclusive group is insufficient.
+- Reentrant callbacks may accept overlapping goals. Define admission,
+  preemption, and shared-state policies, and reserve execution capacity for
+  cancellation. Cooperative async execution is another option when supported.
+- Check cancellation between bounded work units, publish feedback, and set one
+  terminal outcome: succeeded, canceled, or aborted. Handle exceptions and
+  shutdown without leaving accepted goals indefinitely executing.
+- In C++, own and join worker threads or use executor-driven state machines.
+  Do not detach a thread capturing a node or adapter that may be destroyed.
+- Avoid synchronous client waits from callbacks whose executor/group must
+  process the response. Use asynchronous requests and bounded readiness checks.
+- Test rejection, successful completion, cancellation during work, failure,
+  concurrent-goal policy, and shutdown; verify responsiveness without sleeps.
+
 ## Service Implementation
 
 ### 1. Service Definition (.srv)
@@ -27,7 +50,10 @@ string previous_mode
 
 ### 2. Infrastructure Layer - Service Server (Python)
 
-See previous Python example.
+Use `node.create_service(ServiceType, name, callback)` and retain the service.
+The callback converts the request to domain inputs, calls the injected use case,
+fills the provided response, and returns it. Translate expected domain failures
+into the service contract instead of leaking middleware types into the domain.
 
 ### 3. Infrastructure Layer - Service Server (C++)
 
