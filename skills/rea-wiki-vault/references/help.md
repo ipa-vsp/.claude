@@ -17,6 +17,7 @@ prefix with `$rea-wiki-vault` in Codex; Claude Code and Antigravity use `/`.
 | `init <id>` | Detect current workspace; preview/register as target, scan and snapshot | `/rea-wiki-vault init my-robot` |
 | `map <id>` | Refresh workspace declaration/ROS-endpoint map and pinned environment | `/rea-wiki-vault map fr3-ws` |
 | `graph <id>` | Refresh Graphify / link graph / find call paths and hotspots | `/rea-wiki-vault graph fr3-ws` |
+| `understand <mode> [args]` | Understand Anything install, wiki/source analysis, dashboard, chat, explain or diff | `/rea-wiki-vault understand knowledge` |
 | `dashboard <id>` | Build offline Wiki Lab visualization (port 4180) | `/rea-wiki-vault dashboard fr3-ws` |
 
 ## Engineering intelligence
@@ -42,6 +43,10 @@ prefix with `$rea-wiki-vault` in Codex; Claude Code and Antigravity use `/`.
 - **Graphify skill + CLI:** source AST/dependency graph, god-nodes, path,
   `affected`, `explain`, `query`, `update`, watch; graph file linked under
   `generated/graphify/<id>`, shown in the browser and Obsidian.
+- **Understand Anything:** interactive wiki/source graphs; `/rea-wiki-vault understand install`,
+  `understand knowledge`, `understand source <path>`, `understand dashboard [path]`,
+  `understand chat <question>`, `understand explain <symbol>`, `understand diff`.
+  See `references/understand-anything.md` for setup and vault evidence overrides.
 - **REA MCP:** permitted opaque binary/ELF/firmware, Frida/gdb, browser captures,
   packet/candump/pcap; optional tools such as Ghidra/tshark must exist.
 - **Obsidian:** dashboard, knowledge graph/backlinks, Dataview, concepts, hubs,

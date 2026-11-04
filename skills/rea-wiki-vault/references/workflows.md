@@ -89,3 +89,11 @@
   orphans, stale source paths, contradictions and un-ingested source items.
 - `tools/build_dashboard.py . <target>` feeds `dashboard/index.html?t=<id>`.
 - Append relevant activity to `log.md`, never erase audit history.
+
+## Understand Anything wiki/source visualization
+
+Read `understand-anything.md` for installation and command routing. Use
+`/understand-knowledge <vault-path>` for wiki articles and `/understand <source-path>`
+for a bounded source flow. Check existing graphs first. Keep generated output local,
+preserve intermediates, and verify source/runtime facts before updating notes.
+The `understand dashboard` route is separate from the existing Wiki Lab dashboard.

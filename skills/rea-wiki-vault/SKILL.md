@@ -2,11 +2,11 @@
 name: rea-wiki-vault
 description: >-
   Shared engineering-memory assistant for ROS 2, robot control, RL/IL/VLA, CANopen,
-  EtherCAT, research-paper and website ingestion, source Graphify, runtime REA,
+  EtherCAT, research-paper and website ingestion, source Graphify, Understand Anything knowledge graphs, runtime REA,
   debugging, tests, experiments and linked Obsidian notes. Use when asked to map,
   initialize, research, understand, visualize, query, document, or troubleshoot
   a workspace with the REA Wiki Vault. Supports --help and guided setup.
-argument-hint: "[--help | doctor | bootstrap | init | map | graph | trace | ingest | query | search | debug | test | experiment | adr | runbook | dashboard | lint | rea | status] [args]"
+argument-hint: "[--help | doctor | bootstrap | init | map | graph | understand | trace | ingest | query | search | debug | test | experiment | adr | runbook | dashboard | lint | rea | status] [args]"
 user-invocable: true
 ---
 
@@ -37,8 +37,8 @@ actual skill invocation and filesystem-permission model; this file cannot confer
    source root, affected files, requirements and blockers; then run `setup --apply`
    only if the user has authorized initialization/writes. On existing target,
    refresh only when asked. Do not replace existing target notes or data without consent.
-5. For other commands, use `references/help.md` to route. Read `references/workflows.md`
-   and `references/graphify.md` only for workflows requiring them. Start with
+5. For other commands, use `references/help.md` to route. Read `references/workflows.md`,
+   `references/graphify.md`, and `references/understand-anything.md` only for workflows requiring them. Start with
    `index.md` -> relevant `hubs/` and `targets/<id>.md` -> focused wiki notes.
 
 ## Permissions / multi-agent workspace access
@@ -105,6 +105,7 @@ operations only; agent reasoning is needed for research/documentation.
 | `<skill> init [target]` | Guide current-workspace registration, snapshot, scan, dashboard, Graphify linking |
 | `<skill> map [target]` | Run ROS/source map + snapshot, verify map limitations |
 | `<skill> graph [target]` | Use Graphify CLI/skill, graph update/path/query/affected, link generated output |
+| `<skill> understand <install|knowledge|source|dashboard|chat|explain|diff> [args]` | Use Understand Anything; read `references/understand-anything.md`, resolve workspace/vault scope, keep evidence contracts |
 | `<skill> trace <flow>` | Graphify lead -> source/read -> verified function/node/interface/feature notes |
 | `<skill> ingest <file|url>` | Preserve immutable source, citation, source note, update concept hubs |
 | `<skill> query <question>` | Evidence-backed answer from notes, optionally `wiki/analyses/` |
@@ -130,6 +131,18 @@ operations only; agent reasoning is needed for research/documentation.
   `graphify query "question"`.
 - If missing, provide opt-in setup commands; installing a skill is not the same
   as installing Graphify's executable. See `references/graphify.md`.
+
+## Understand Anything companion
+
+Use Understand Anything for interactive source or wiki knowledge graphs. Read
+[references/understand-anything.md](references/understand-anything.md) for installation,
+commands, scope and vault overrides. `understand knowledge` targets the vault;
+`understand source <path>` targets an explicitly scoped source tree. Reuse existing
+Graphify output first for source investigations; Understand Anything complements it.
+Generated entities, claims and edges are leads: verify source/runtime facts before
+writing evidence-backed notes. Keep the existing Wiki Lab dashboard route distinct
+from `understand dashboard`. Installation and graph generation are separate actions;
+a documentation update does not authorize either.
 
 ## Safety boundary
 
