@@ -326,8 +326,9 @@ table in `CLAUDE.md`, or it will never be triggered.
 ## Other coding agents (Codex, Antigravity, …)
 
 `.claude/` is the single source of truth. `scripts/link-agents.sh` exposes it
-to other coding agents by creating **relative symlinks** in the workspace root
-(the directory containing `.claude/`) — nothing is copied, so editing a skill,
+to other coding agents by creating **relative symlinks** in the current
+directory (run it from the workspace root), or in `<path>` with `-l <path>`,
+which also adds a `<path>/.claude` symlink the agent links go through — nothing is copied, so editing a skill,
 rule, or agent here updates every agent at once. Same pattern as
 `IsaacLab/.claude/skills -> ../.agents/skills`, just pointing the other way.
 
@@ -336,6 +337,8 @@ rule, or agent here updates every agent at once. Same pattern as
 .claude/scripts/link-agents.sh --list             # supported agents and their links
 .claude/scripts/link-agents.sh all                # every supported agent
 .claude/scripts/link-agents.sh --remove codex     # remove that agent's links
+.claude/scripts/link-agents.sh -l ~/other_ws codex   # links + .claude in ~/other_ws
+.claude/scripts/link-agents.sh -l ~/other_ws -r codex  # remove (drops .claude when unused)
 ```
 
 Result for `codex agy`:
