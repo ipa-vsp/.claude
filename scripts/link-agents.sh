@@ -3,21 +3,26 @@
 #
 # Nothing is copied: every entry created is a relative symlink back into
 # .claude/, so editing a skill/rule/agent here updates every agent at once.
-# Links are created in the directory that contains .claude/ (the workspace root).
+# Links are created in the current directory, or in <path> when -l <path> is
+# given. With -l, a .claude symlink is also created in <path> and the agent
+# links go through it (e.g. <path>/.agents/skills -> ../.claude/skills).
 #
 # Usage:
-#   .claude/scripts/link-agents.sh <agent> [<agent> ...]   create links
-#   .claude/scripts/link-agents.sh --remove <agent> ...    remove links
+#   .claude/scripts/link-agents.sh <agent> [<agent> ...]   create links in $PWD
+#   .claude/scripts/link-agents.sh -l <path> <agent> ...   create links (+ .claude) in <path>
+#   .claude/scripts/link-agents.sh --remove <agent> ...    remove links (combine with -l)
 #   .claude/scripts/link-agents.sh --list                  show supported agents
 #   .claude/scripts/link-agents.sh all                     every supported agent
 #
 # Example:
 #   .claude/scripts/link-agents.sh codex agy
+#   .claude/scripts/link-agents.sh -l ~/other_ws codex
 
 set -euo pipefail
 
 CLAUDE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$(dirname "$CLAUDE_DIR")"
+ROOT=""        # destination directory, set in main()
+VIA_LOCAL=0    # 1 = link targets go through $ROOT/.claude
 
 # Each mapping is "<link path relative to ROOT>:<target path relative to .claude/>".
 # Only formats the agent reads natively are linked — e.g. Codex subagents are
@@ -56,7 +61,7 @@ declare -A DESCRIPTIONS=(
   [goose]="Goose"
 )
 
-usage() { sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,19p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
 
 list_agents() {
   local agent pair
@@ -78,17 +83,23 @@ resolve_agent() {
   echo "$name"
 }
 
+# True if $ROOT/.claude is (or resolves to) this .claude/ directory.
+local_claude_ok() {
+  [[ -e "$ROOT/.claude" && "$(readlink -f "$ROOT/.claude")" == "$CLAUDE_DIR" ]]
+}
+
 link_one() {
   local link="$ROOT/$1" target="$CLAUDE_DIR/$2"
+  [[ "$2" == "." ]] && target="$CLAUDE_DIR"
   if [[ ! -e "$target" ]]; then
     echo "  skip    $1 (no .claude/$2)"
     return
   fi
+  if [[ -e "$link" && "$(readlink -f "$link")" == "$(readlink -f "$target")" ]]; then
+    echo "  ok      $1"
+    return
+  fi
   if [[ -L "$link" ]]; then
-    if [[ "$(readlink -f "$link")" == "$(readlink -f "$target")" ]]; then
-      echo "  ok      $1"
-      return
-    fi
     echo "  WARN    $1 is a symlink to $(readlink "$link") — left untouched" >&2
     return
   fi
@@ -97,12 +108,18 @@ link_one() {
     return
   fi
   mkdir -p "$(dirname "$link")"
-  ln -sr "$target" "$link"
+  if [[ $VIA_LOCAL -eq 1 && "$2" != "." ]]; then
+    # Relative path through $ROOT/.claude (ln -r would resolve that symlink).
+    ln -s "$(realpath -sm --relative-to="$(dirname "$link")" "$ROOT/.claude/$2")" "$link"
+  else
+    ln -sr "$target" "$link"
+  fi
   echo "  linked  $1 -> $(readlink "$link")"
 }
 
 unlink_one() {
   local link="$ROOT/$1" target="$CLAUDE_DIR/$2" dir
+  [[ "$2" == "." ]] && target="$CLAUDE_DIR"
   # Only remove links that point back into .claude/ — never user files.
   if [[ -L "$link" && "$(readlink -f "$link")" == "$(readlink -f "$target")" ]]; then
     rm "$link"
@@ -113,20 +130,55 @@ unlink_one() {
   fi
 }
 
+# True if any agent link still points into .claude/ (the .claude link is in use).
+any_agent_link_left() {
+  local agent pair link
+  for agent in "${!MAPPINGS[@]}"; do
+    for pair in ${MAPPINGS[$agent]}; do
+      link="$ROOT/${pair%%:*}"
+      [[ -L "$link" && "$(readlink -f "$link")" == "$(readlink -f "$CLAUDE_DIR/${pair#*:}")" ]] && return 0
+    done
+  done
+  return 1
+}
+
 main() {
-  local action=link agents=() arg agent pair
+  local action=link agents=() dest="" agent pair
   [[ $# -eq 0 ]] && { usage; exit 1; }
 
-  for arg in "$@"; do
-    case "$arg" in
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
       -h|--help) usage; exit 0 ;;
-      -l|--list) list_agents; exit 0 ;;
+      --list) list_agents; exit 0 ;;
       -r|--remove) action=unlink ;;
+      -l|--location)
+        [[ $# -lt 2 ]] && { echo "error: $1 needs a <path>" >&2; exit 1; }
+        dest="$2"; shift ;;
       all) agents+=("${!MAPPINGS[@]}") ;;
-      *) agents+=("$(resolve_agent "$arg")") ;;
+      *) agents+=("$(resolve_agent "$1")") ;;
     esac
+    shift
   done
   [[ ${#agents[@]} -eq 0 ]] && { echo "error: no agent given" >&2; exit 1; }
+
+  if [[ -n "$dest" ]]; then
+    [[ -d "$dest" ]] || { echo "error: '$dest' is not a directory" >&2; exit 1; }
+    ROOT="$(cd "$dest" && pwd)"
+  else
+    ROOT="$PWD"
+  fi
+  # Never drop AGENTS.md etc. inside .claude/ itself.
+  if [[ "$(readlink -f "$ROOT")/" == "$CLAUDE_DIR/"* ]]; then
+    echo "error: target '$ROOT' is inside $CLAUDE_DIR — run from the workspace root or use -l <path>" >&2
+    exit 1
+  fi
+  echo "target: $ROOT"
+
+  if [[ -n "$dest" && $action == link ]]; then
+    echo ".claude:"
+    link_one ".claude" "."
+  fi
+  local_claude_ok && VIA_LOCAL=1
 
   for agent in $(printf '%s\n' "${agents[@]}" | sort -u); do
     echo "$agent (${DESCRIPTIONS[$agent]}):"
@@ -134,6 +186,12 @@ main() {
       "${action}_one" "${pair%%:*}" "${pair#*:}"
     done
   done
+
+  # With -l, drop the .claude link once no agent link uses it any more.
+  if [[ -n "$dest" && $action == unlink && -L "$ROOT/.claude" ]] && ! any_agent_link_left; then
+    echo ".claude:"
+    unlink_one ".claude" "."
+  fi
 }
 
 main "$@"
